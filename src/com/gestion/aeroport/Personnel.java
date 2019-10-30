@@ -1,5 +1,5 @@
 package com.gestion.aeroport;
 
-public class Personne {
+public class Personnel {
 
 }
