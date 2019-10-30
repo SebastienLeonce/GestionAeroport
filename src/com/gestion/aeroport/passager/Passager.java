@@ -1,4 +1,4 @@
-package com.gestion.aeroport;
+package com.gestion.aeroport.passager;
 
 import java.util.Calendar;
 
