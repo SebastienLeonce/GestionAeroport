@@ -8,13 +8,13 @@ public class Passager {
 	private String nom;
 	private Calendar anniversaire;
 	private String nationalite;
-	private long numeroPasseport;
+	private String numeroPasseport;
 	
-	private String voyage; // depart|destination
-	private String historique = null; //reflechir au fonctionnement 
-	private int numeroVol = -1;
+	private String voyage; // depart|destination // peux être un accès a une instance de l'aeroport
+	private String historique = null; //reflechir au fonctionnement // créer une classe ou juste une String
+	private int numeroVol = -1; // -1 si pas de vol
 	
-	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, long numeroPasseport, String voyage) {
+	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage) {
 		this.prenom = prenom;
 		this.nom = nom;
 		this.anniversaire = anniversaire;
@@ -38,7 +38,7 @@ public class Passager {
 
 	public static void main (String[] args) {
 		Calendar date = new Calendar.Builder(). setFields(Calendar.YEAR, 1999, Calendar.MONTH, Calendar.MARCH,Calendar.DAY_OF_MONTH, 13).build();
-		Passager passager = new Passager("Sebastien", "LEONCE", date, "franÃ§ais", 123456789, "Orly|Marseille");
+		Passager passager = new Passager("Sebastien", "LEONCE", date, "français", "abc123456789", "Orly|Marseille");
 		
 		System.out.println(passager.toString());
 	}

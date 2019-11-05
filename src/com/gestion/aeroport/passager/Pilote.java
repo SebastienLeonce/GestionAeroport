@@ -13,9 +13,9 @@ public class Pilote extends Passager {
 	private int passagersMax;
 	private int tempsPause;
 
-	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, long numeroPasseport, String voyage, String employeur, int passagersMax, int tempsPause) {
+	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, String employeur, int passagersMax, int tempsPause) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
-		this.employeur = Integer.parseInt(employeur.substring(0, 1));
+		this.employeur = Integer.parseInt(employeur.substring(0, 1));//Verification si c'est un exmployeur valide au minima une regex
 		this.employeur_name = employeur.substring(2, employeur.length());
 		this.passagersMax = passagersMax;
 		this.tempsPause = tempsPause;
@@ -32,7 +32,7 @@ public class Pilote extends Passager {
 
 	public static void main (String[] args) {
 		Calendar date = new Calendar.Builder(). setFields(Calendar.YEAR, 1999, Calendar.MONTH, Calendar.MARCH ,Calendar.DAY_OF_MONTH, 13).build();
-		Pilote pilote = new Pilote("Sebastien", "LEONCE", date, "franÃ§ais", 123456789, "Orly|Marseille", "1|FRANCE", 250, 66);
+		Pilote pilote = new Pilote("Sebastien", "LEONCE", date, "français", "123456789", "Orly|Marseille", "1|FRANCE", 250, 66);
 		
 		System.out.println(pilote.toString());
 	}
