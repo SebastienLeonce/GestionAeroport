@@ -41,6 +41,11 @@ public class Compagnie {
 	}
 
 
+	public String getNom() {
+		return nom;
+	}
+
+
 	public static void main (String[] args) throws IOException {
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat");
 		Scanner sc = new Scanner(url.openStream()); 

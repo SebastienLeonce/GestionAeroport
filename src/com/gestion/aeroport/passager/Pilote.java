@@ -1,39 +1,49 @@
 package com.gestion.aeroport.passager;
 
 import java.util.Calendar;
+import java.util.Random;
+
+import com.gestion.aeroport.aeroport.Compagnie;
 
 public class Pilote extends Passager {
 	
-	/*private final int COMPAGNIE = 0;
-	private final int ETAT = 1;
-	private final int PRIVE = 2;*/
 	
-	private int employeur;
-	private String employeur_name;
+	private Compagnie employeur;
 	private int passagersMax;
 	private int tempsPause;
 
-	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, String employeur, int passagersMax, int tempsPause) {
+	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, Compagnie employeur, int passagersMax, int tempsPause) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
-		this.employeur = Integer.parseInt(employeur.substring(0, 1));//Verification si c'est un exmployeur valide au minima une regex
-		this.employeur_name = employeur.substring(2, employeur.length());
+		this.employeur = employeur;
 		this.passagersMax = passagersMax;
 		this.tempsPause = tempsPause;
 	}
 	
+	public Pilote (Compagnie employeur) {
+		super(null);
+		this.employeur = employeur;
+		this.passagersMax = new Random().nextInt(500 - 200 + 1)  + 400;
+		this.tempsPause = new Random().nextInt(20 - 5 + 1)  + 20;
+	}
+	
+	public Compagnie getEmployeur() {
+		return employeur;
+	}
+
+	public int getPassagersMax() {
+		return passagersMax;
+	}
+
+	public int getTempsPause() {
+		return tempsPause;
+	}
+
 	@Override
 	public String toString() {
 		return 	super.toString() + 
 				"\ttypeEmployeur   = " + employeur + "\n" +
-				"\temployeur       = " + employeur_name + "\n" +
+				"\temployeur       = " + employeur.getNom() + "\n" +
 				"\tpassagersMax    = " + passagersMax + "\n" + 
 				"\ttempsPause      = " + tempsPause;
-	}
-
-	public static void main (String[] args) {
-		Calendar date = new Calendar.Builder(). setFields(Calendar.YEAR, 1999, Calendar.MONTH, Calendar.MARCH ,Calendar.DAY_OF_MONTH, 13).build();
-		Pilote pilote = new Pilote("Sebastien", "LEONCE", date, "français", "123456789", "Orly|Marseille", "1|FRANCE", 250, 66);
-		
-		System.out.println(pilote.toString());
 	}
 }
