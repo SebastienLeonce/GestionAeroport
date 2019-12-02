@@ -12,6 +12,18 @@ public class Pilote extends Passager {
 	private int passagersMax;
 	private int tempsPause;
 
+	/**
+	 * 
+	 * @param prenom
+	 * @param nom
+	 * @param anniversaire
+	 * @param nationalite
+	 * @param numeroPasseport
+	 * @param voyage
+	 * @param employeur
+	 * @param passagersMax
+	 * @param tempsPause
+	 */
 	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, Compagnie employeur, int passagersMax, int tempsPause) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
 		this.employeur = employeur;
@@ -19,6 +31,10 @@ public class Pilote extends Passager {
 		this.tempsPause = tempsPause;
 	}
 	
+	/**
+	 * 
+	 * @param employeur
+	 */
 	public Pilote (Compagnie employeur) {
 		super(null);
 		this.employeur = employeur;
@@ -26,18 +42,33 @@ public class Pilote extends Passager {
 		this.tempsPause = new Random().nextInt(20 - 5 + 1)  + 20;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Compagnie getEmployeur() {
 		return employeur;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getPassagersMax() {
 		return passagersMax;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getTempsPause() {
 		return tempsPause;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return 	super.toString() + 
