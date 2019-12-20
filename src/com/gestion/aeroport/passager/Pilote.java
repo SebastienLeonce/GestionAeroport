@@ -1,5 +1,6 @@
 package com.gestion.aeroport.passager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -72,9 +73,16 @@ public class Pilote extends Passager {
 	@Override
 	public String toString() {
 		return 	super.toString() + 
-				"\ttypeEmployeur   = " + employeur + "\n" +
 				"\temployeur       = " + employeur.getNom() + "\n" +
 				"\tpassagersMax    = " + passagersMax + "\n" + 
 				"\ttempsPause      = " + tempsPause;
+	}
+	
+	public static ArrayList<Pilote> generate(int n, Compagnie c){
+		ArrayList<Pilote> pilotes = new ArrayList<Pilote>();
+		for (int i = 0 ; i < n ; i++) {
+			pilotes.add(new Pilote(c));
+		}
+		return pilotes;
 	}
 }
