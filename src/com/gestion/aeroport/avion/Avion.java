@@ -10,7 +10,7 @@ import com.gestion.aeroport.aeroport.Compagnie;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Pilote;
 
-public abstract class Avion {
+public class Avion {
 	
 	private String modele;
 	private int capaciteMax;
@@ -45,13 +45,28 @@ public abstract class Avion {
 		this.nbPilotes++;
 		pilotes.add(pilote);
 	}
-
 	
+	@Override
+	public String toString() {
+		return  "\n\t\tmodele          = " + modele + "\n\t\t"+
+				"capaciteMax     = " + capaciteMax + "\n\t\t"+
+				"capacite        = " + capacite + "\n\t\t"+
+				"poidsBagagesMax = " + poidsBagagesMax + "\n\t\t"+
+				"poidsBagages    = " + poidsBagages + "\n\t\t"+
+				"volCarburant    = "+ volCarburant + "\n\t\t"+
+				"nbPilotesMin    = " + nbPilotesMin + "\n\t\t"+
+				"nbPilotes       = " + nbPilotes +"\n\t\t"+
+				"passagers       = "+ passagers + "\n\t\t"+
+				"pilotes         = " + pilotes + "\n\t\t";
+	}
+
 	public static ArrayList<Avion> generate(int n) throws IOException{
-		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/plane.dat");
+		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/planes.dat");
 		ArrayList<Avion> avions = new ArrayList<Avion>();
 		Scanner sc = new Scanner(url.openStream());
+		
 		String[] data;
+		
 		if(sc.hasNextLine()) {
 			sc.nextLine(); //Première ligne inutile
 		}
@@ -63,21 +78,18 @@ public abstract class Avion {
 			if(sc.hasNextLine()) {
 				data = sc.nextLine().split(","); 
 				
-				//A FAIRE Variables Globales
+				int capacite = 300 + (int)(Math.random() * ((600-300) + 1 ));
+				int nbPilotes = 1 + (int)(Math.random() * ((3-1) + 1 ));
+				float poidsBagagesMax = capacite*40;
+				float volCarburant = 200 + (int)(Math.random() * ((400-200) + 1 ));
 				
-				int capacite = 10 + (int)(Math.random() * ((50-10) + 1 ));
-				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
-				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
-				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
-				
-				
-				
-				avions.add(new Avion());
+				avions.add(new Avion(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes));
 			}
 			else {
 				break;
 			}
 		}
+		return avions;
 	}
 	
 	

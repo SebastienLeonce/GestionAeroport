@@ -39,7 +39,7 @@ public class Pilote extends Passager {
 	public Pilote (Compagnie employeur) {
 		super(null);
 		this.employeur = employeur;
-		this.passagersMax = new Random().nextInt(500 - 200 + 1)  + 400;
+		this.passagersMax = new Random().nextInt(500 - 200 + 1)  + 200;
 		this.tempsPause = new Random().nextInt(20 - 5 + 1)  + 20;
 	}
 	

@@ -57,19 +57,25 @@ public class Compagnie {
 		ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
 		Scanner sc = new Scanner(url.openStream());
 		String[] data;
-		if(sc.hasNextLine()) {
-			sc.nextLine();  //Première ligne inutile
-		}
-		else {
-			throw new IOException("File Empty");
-		}
+		
+		if(sc.hasNextLine()) { sc.nextLine(); } else { throw new IOException("File Empty"); } //Première ligne inutile
+		
 		for (int i = 0 ; i < n ; i++) { 
+			
 			if(sc.hasNextLine()) {
+				
 				data = sc.nextLine().split(","); 			
 				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
+				int nbAvions = (10 + (int)(Math.random() * ((50-10) + 1 )))/2;
+				
 				Compagnie comp = new Compagnie(data[1], data[6]);
+				
 				ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
+				ArrayList<Avion>  avions = Avion.generate(nbAvions);
+				//personnels
 				comp.setPilotes(pilotes);
+				comp.setFlotte(avions);
+				
 				compagnies.add(comp);
 			}
 			else {
