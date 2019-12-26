@@ -10,7 +10,7 @@ import com.gestion.aeroport.aeroport.Compagnie;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Pilote;
 
-public class Avion {
+public abstract class Avion {
 	
 	private String modele;
 	private int capaciteMax;
@@ -60,7 +60,8 @@ public class Avion {
 				"pilotes         = " + pilotes + "\n\t\t";
 	}
 
-	public static ArrayList<Avion> generate(int n) throws IOException{
+	//O prive 1 ligne 2 diplo
+	public static ArrayList<Avion> generate(int n, Compagnie c) throws IOException{
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/planes.dat");
 		ArrayList<Avion> avions = new ArrayList<Avion>();
 		Scanner sc = new Scanner(url.openStream());
@@ -80,10 +81,15 @@ public class Avion {
 				
 				int capacite = 300 + (int)(Math.random() * ((600-300) + 1 ));
 				int nbPilotes = 1 + (int)(Math.random() * ((3-1) + 1 ));
+				int nbPersonnels = 5 + (int)(Math.random() * ((15-5) + 5 ));
 				float poidsBagagesMax = capacite*40;
 				float volCarburant = 200 + (int)(Math.random() * ((400-200) + 1 ));
-				
-				avions.add(new Avion(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes));
+			
+				if (c.getNom().equals("\"Private flight\"")) {
+					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes, new Passager("null")));
+				} else {
+					avions.add(new AvionLigne(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes, nbPersonnels, c));
+				}
 			}
 			else {
 				break;

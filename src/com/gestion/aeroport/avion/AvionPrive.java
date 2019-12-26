@@ -1,12 +1,21 @@
 package com.gestion.aeroport.avion;
 
+import com.gestion.aeroport.passager.Passager;
+
 public class AvionPrive extends Avion {
 	
-	private String proprietaire;
+	private Passager proprietaire;
 
-	public AvionPrive(String modele, int capacite, float poidsBagagesMax, float volCarburant, int nbPilotes, String proprietaire) {
+	public AvionPrive(String modele, int capacite, float poidsBagagesMax, float volCarburant, int nbPilotes, Passager proprietaire) {
 		super(modele, capacite, poidsBagagesMax, volCarburant, nbPilotes);
 		
 		this.proprietaire = proprietaire;
 	}
+
+	@Override
+	public String toString() {
+		return super.toString() +"\n proprietaire:" + proprietaire ;
+	}
+	
+	
 }

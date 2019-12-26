@@ -10,7 +10,7 @@ public class Aeroport {
 
 	public static void main (String[] args) throws IOException {
 
-		ArrayList<Compagnie> compagnies = Compagnie.generate(1);
+		ArrayList<Compagnie> compagnies = Compagnie.generate(2);
 		System.out.println(compagnies);
 		
 		

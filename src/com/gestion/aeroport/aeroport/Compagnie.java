@@ -5,11 +5,7 @@ import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
 
 import java.util.ArrayList;
-import java.util.List;
-
-
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -67,12 +63,12 @@ public class Compagnie {
 				data = sc.nextLine().split(","); 			
 				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
 				int nbAvions = (10 + (int)(Math.random() * ((50-10) + 1 )))/2;
-				
+
 				Compagnie comp = new Compagnie(data[1], data[6]);
 				
 				ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
-				ArrayList<Avion>  avions = Avion.generate(nbAvions);
-				//personnels
+				ArrayList<Avion>  avions = Avion.generate(nbAvions, comp);
+				// rajouter personnel et avion diplomatique
 				comp.setPilotes(pilotes);
 				comp.setFlotte(avions);
 				
