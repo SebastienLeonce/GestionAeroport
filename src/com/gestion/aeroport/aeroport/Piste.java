@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class Piste {
 
-    public enum TypePiste{
+    
+	public enum TypePiste{
         DECOLLAGE, ATTERISSAGE
     }
 
@@ -29,4 +30,10 @@ public class Piste {
         return this.type;
     }
 
+    
+    @Override
+	public String toString() {
+		return "Piste [fileDAttente=" + fileDAttente + ", espacement=" + espacement + ", type=" + type + "]";
+	}
+    
 }

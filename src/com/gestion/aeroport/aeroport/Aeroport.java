@@ -1,20 +1,47 @@
 package com.gestion.aeroport.aeroport;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Aeroport {
-
-
-	public static void main (String[] args) throws IOException {
-
-		ArrayList<Compagnie> compagnies = Compagnie.generate(2);
-		System.out.println(compagnies);
-		
-		
-		
+ 
 	
+	private String nom;
+	private ArrayList<Piste> pistes; 
+	private ArrayList<Vol> radar = new ArrayList<Vol>(); 
+	
+	
+	
+	public Aeroport(String nom) {
+		this.nom = nom;
 	}
+	public Aeroport(String nom, ArrayList<Piste> pistes) {
+		this.nom = nom;
+		this.pistes = pistes;
+	}
+	
+	
+	public String getNom() {
+		return nom;
+	}
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	public ArrayList<Piste> getPistes() {
+		return pistes;
+	}
+	public void setPistes(ArrayList<Piste> pistes) {
+		this.pistes = pistes;
+	}
+	public ArrayList<Vol> getRadar() {
+		return radar;
+	}
+	public void setRadar(ArrayList<Vol> radar) {
+		this.radar = radar;
+	}
+	@Override
+	public String toString() {
+		return "Aeroport [nom=" + nom + ", pistes=" + pistes + ", radar=" + radar + "]";
+	}
+	
+	
 }

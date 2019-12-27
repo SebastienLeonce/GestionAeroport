@@ -7,7 +7,12 @@ import com.gestion.aeroport.passager.Passager;
 
 public class Vol {
 
-    private Avion avion;
+    @Override
+	public String toString() {
+		return "Vol [avion=" + avion + ", occupants=" + occupants + ", aeroportArrivee=" + aeroportArrivee
+				+ ", aeroportDepart=" + aeroportDepart + "]";
+	}
+	private Avion avion;
     private ArrayList<Passager> occupants;
     private Aeroport aeroportArrivee;
     private Aeroport aeroportDepart;
