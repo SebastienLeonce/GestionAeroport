@@ -5,18 +5,12 @@ import java.util.ArrayList;
 public class Piste {
 
     
-	public enum TypePiste{
-        DECOLLAGE, ATTERISSAGE
-    }
-
     private ArrayList<Vol> fileDAttente;
     private int espacement;
-    private TypePiste type;
 
-    Piste(final int espacement, TypePiste type){
+    Piste(final int espacement){
         this.fileDAttente = new ArrayList<Vol>();
         this.espacement = espacement;
-        this.type = type;
     }
 
 
@@ -26,14 +20,10 @@ public class Piste {
     public int getEspacement(){
         return this.espacement;
     }
-    public TypePiste getTypePiste(){
-        return this.type;
-    }
-
     
     @Override
 	public String toString() {
-		return "Piste [fileDAttente=" + fileDAttente + ", espacement=" + espacement + ", type=" + type + "]";
+		return "Piste [fileDAttente=" + fileDAttente + ", espacement=" + espacement +"]";
 	}
     
 }

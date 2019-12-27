@@ -48,18 +48,13 @@ public abstract class Avion {
 	
 	@Override
 	public String toString() {
-		return  "\n\t\tmodele          = " + modele + "\n\t\t"+
-				"capaciteMax     = " + capaciteMax + "\n\t\t"+
-				"capacite        = " + capacite + "\n\t\t"+
-				"poidsBagagesMax = " + poidsBagagesMax + "\n\t\t"+
-				"poidsBagages    = " + poidsBagages + "\n\t\t"+
-				"volCarburant    = "+ volCarburant + "\n\t\t"+
-				"nbPilotesMin    = " + nbPilotesMin + "\n\t\t"+
-				"nbPilotes       = " + nbPilotes +"\n\t\t"+
-				"passagers       = "+ passagers + "\n\t\t"+
-				"pilotes         = " + pilotes + "\n\t\t";
+		return modele + "\n" +
+				"\tCarburant restant : " + volCarburant;
 	}
 
+	
+	
+	
 	//O prive 1 ligne 2 diplo
 	public static ArrayList<Avion> generate(int n, Compagnie c) throws IOException{
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/planes.dat");

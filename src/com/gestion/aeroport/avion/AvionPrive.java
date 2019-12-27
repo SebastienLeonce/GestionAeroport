@@ -14,7 +14,7 @@ public class AvionPrive extends Avion {
 
 	@Override
 	public String toString() {
-		return super.toString() +"\n proprietaire:" + proprietaire ;
+		return "Avion Privé : " + super.toString() +"\n proprietaire:" + proprietaire ;
 	}
 	
 	

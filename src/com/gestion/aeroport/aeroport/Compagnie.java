@@ -83,7 +83,7 @@ public class Compagnie {
 	}
 
 
-	private ArrayList<Avion> getFlotte() {
+	public ArrayList<Avion> getFlotte() {
 		return flotte;
 	}
 
@@ -93,7 +93,7 @@ public class Compagnie {
 	}
 
 
-	private ArrayList<Pilote> getPilotes() {
+	public ArrayList<Pilote> getPilotes() {
 		return pilotes;
 	}
 
@@ -103,7 +103,7 @@ public class Compagnie {
 	}
 
 
-	private ArrayList<Personnel> getPersonnels() {
+	public ArrayList<Personnel> getPersonnels() {
 		return personnels;
 	}
 

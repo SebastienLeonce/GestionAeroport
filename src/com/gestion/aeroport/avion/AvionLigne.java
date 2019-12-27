@@ -38,10 +38,7 @@ public class AvionLigne extends Avion {
 	
 	@Override
 	public String toString() {
-		return super.toString() + 
-				"nbPersonnelsMin=" + nbPersonnelsMin + 
-				"\nnbPersonnels=" + nbPersonnels + 
-				"\npersonnels=" + personnels + "]";
+		return "Avion de Ligne :  " +super.toString();
 	}
 	
 }
