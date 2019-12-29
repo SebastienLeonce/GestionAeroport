@@ -53,6 +53,16 @@ public class Aeroport {
 	}
 	
 	
+	public void Atterissage() {
+		for(Piste p: pistesAtterissage) {
+			if(p.getFileDAttente().size()>0) {
+				Vol v = p.getFileDAttente().remove(0);
+				System.out.println("Le vol " + v + " vient d'attérir");
+			}			
+		}
+	}
+	
+	
 	//Calcul et insère à la position optimal un avion dans la file d'attente
 	public static int calculPositionAtterissage(Piste p, Vol v) {
 		int position = p.getFileDAttente().size();
