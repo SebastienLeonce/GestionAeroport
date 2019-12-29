@@ -7,7 +7,7 @@ import com.gestion.aeroport.passager.Passager;
 
 public class Vol {
 
-    private static int compteur = 0;
+    private static int compteur = 1;
     private int numeroDeVol;
 	private Avion avion;
     private ArrayList<Passager> occupants;

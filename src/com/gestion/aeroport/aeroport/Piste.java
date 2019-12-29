@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Piste {
 
-    
     private ArrayList<Vol> fileDAttente;
     private int espacement;
 
@@ -21,9 +20,11 @@ public class Piste {
         return this.espacement;
     }
     
-    @Override
+
+
+	@Override
 	public String toString() {
-		return "Piste [fileDAttente=" + fileDAttente + ", espacement=" + espacement +"]";
+		return "Piste \n fileDAttente=" + fileDAttente + ", espacement=" + espacement +"\n";
 	}
     
 }

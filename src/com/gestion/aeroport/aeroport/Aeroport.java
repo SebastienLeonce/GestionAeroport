@@ -53,20 +53,19 @@ public class Aeroport {
 	}
 	
 	
-	/*WIP
-	
-	public int calculPositionAtterissage() {
-		int tempsMinimum = this.pistesAtterissage.get(0).getEspacement() * ;
-		int position = 0;
-		for(Piste p : this.pistesAtterissage) {
-			int nouveauTemps = p.getEspacement() * p.getFileDAttente().size();
-			if(nouveauTemps < tempsMinimum) {
-				tempsMinimum = nouveauTemps;
+	//Calcul et insère à la position optimal un avion dans la file d'attente
+	public static int calculPositionAtterissage(Piste p, Vol v) {
+		int position = p.getFileDAttente().size();
+		for(int i = 0; i< p.getFileDAttente().size(); i++) {
+			if(v.getAvion().getVolCarburant() < p.getFileDAttente().get(i).getAvion().getVolCarburant()) {
+				position = i;
+				break;
 			}
 		}
-		return tempsMinimum;
+		p.getFileDAttente().add(position, v);
+		return position;
 	}
-	*/
+	
 	
 	
 }
