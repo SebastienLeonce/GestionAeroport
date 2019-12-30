@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.aeroport.Piste;
 
 public class Program {
 
@@ -76,7 +77,7 @@ public class Program {
 		while(programRunning) {
 			
 			//Attérissage
-			System.out.println("==========Demande d'Attérissage==========");
+			/*System.out.println("==========Demande d'Attérissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Attérissage==========");
 			orly.Atterissage();
@@ -85,7 +86,7 @@ public class Program {
 			System.out.println("==========Demande de Décollage==========");
 			Program.DemandeDecollage();
 			System.out.println("==========Décollage==========");
-			orly.Decollage();
+			orly.Decollage();*/
 			
 			
 			
@@ -98,17 +99,33 @@ public class Program {
 			int action = -1;
 			boolean actionValidee = false;
 			while(!actionValidee) {
+				
 				Scanner sc = new Scanner(System.in);
 				System.out.println("Choisissez une action : ");
-				System.out.println("0 : Blabla\t1 : Quitter");			
+				System.out.println("0 : Fermeture temporaire d'une piste");
+				System.out.println("1 : Réouverture d'une piste");
+				System.out.println("2 : Annulation d'un vol");
+				System.out.println("3 : Passage en priorité d'un vol");
+				System.out.println("4 : Fin du programme");
+				
 				if(sc.hasNextInt()) {
 					action = sc.nextInt();
 					actionValidee = true;
 					switch(action) {
 						case 0:
-							System.out.println("Blabla");
+							System.out.println("Fermeture temporaire d'une piste\n");
+							Program.action0();
 							break;
 						case 1:
+							System.out.println("Réouverture d'une piste");
+							break;
+						case 2:
+							System.out.println("Annulation d'un vol");
+							break;
+						case 3:
+							System.out.println("Passage en priorité d'un vol");
+							break;
+						case 4:
 							System.out.println("Fin du programme");
 							programRunning = false;
 							break;
@@ -123,6 +140,32 @@ public class Program {
 				}
 			}			
 		}
+	}
+	
+	//Fermeture temporaire d'une piste
+	private static void action0 () {
+		System.out.println("PistesAtterissage");
+		System.out.println(orly.getPistesAtterissage());
+		
+		System.out.println("PistesDecollage");
+		System.out.println(orly.getPistesDecollage());
+
+		System.out.println("Entrer l'id de la piste que vous voulez fermer:\n");
+		
+		boolean actionValidee = false;
+		while(!actionValidee) {
+			Scanner sc = new Scanner(System.in);
+			
+			if(sc.hasNextInt()) {
+				actionValidee = orly.eteindrePiste(sc.nextInt());	
+				System.out.println("Entrer un id de piste valide ou écriver \"exit\"\n");
+			} else if (sc.hasNext("exit")) {
+				break;
+			}
+		}
+		
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
 	

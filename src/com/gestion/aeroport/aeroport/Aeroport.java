@@ -8,8 +8,10 @@ public class Aeroport {
  
 	
 	private String nom;
+	
 	private ArrayList<Piste> pistesDecollage;
 	private ArrayList<Piste> pistesAtterissage; 
+	
 	private ArrayList<Vol> radar = new ArrayList<Vol>(); 
 	
 	private ArrayList<Passager> passagersDansAeroport;
@@ -93,6 +95,45 @@ public class Aeroport {
 		}
 		p.getFileDAttente().add(position, v);
 		return position;
+	}
+	public boolean eteindrePiste(int id) {
+		int enMarche = 0;
+		Piste piste = null;
+		
+		for (int i = 0; i < pistesDecollage.size(); i++) {
+	        if (pistesDecollage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        }
+	        
+	        if (pistesDecollage.get(i).getId() == id) {
+	        	piste = pistesDecollage.get(i);
+	        }
+	    }
+		
+		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
+			piste.setEnMarche(false);
+			return true;
+		}
+		
+		enMarche = 0;
+		piste = null;
+		
+		for (int i = 0; i < pistesAtterissage.size(); i++) {
+	        if (pistesAtterissage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        }
+	        
+	        if (pistesAtterissage.get(i).getId() == id) {
+	        	piste = pistesAtterissage.get(i);
+	        }
+	    }
+		
+		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
+			piste.setEnMarche(false);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	
