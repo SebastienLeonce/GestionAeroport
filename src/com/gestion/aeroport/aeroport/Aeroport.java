@@ -2,6 +2,8 @@ package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
 
+import com.gestion.aeroport.passager.Passager;
+
 public class Aeroport {
  
 	
@@ -10,6 +12,7 @@ public class Aeroport {
 	private ArrayList<Piste> pistesAtterissage; 
 	private ArrayList<Vol> radar = new ArrayList<Vol>(); 
 	
+	private ArrayList<Passager> passagersDansAeroport;
 	
 	
 	public Aeroport(String nom) {
@@ -17,6 +20,14 @@ public class Aeroport {
 	}
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
+		
+		//
+		this.passagersDansAeroport = new ArrayList<Passager>();
+		int random = 20 + (int)(Math.random() * ((50-20) + 20 ));
+		for(int i = 0; i < random; i++) {
+			passagersDansAeroport.add(new Passager(Program.Destination.randomDestination().toString()));
+		}	
+		
 		this.pistesDecollage = pistesDecollage;
 		this.pistesAtterissage = pistesAtterissage;
 	}
@@ -61,10 +72,18 @@ public class Aeroport {
 			}			
 		}
 	}
+	public void Decollage() {
+		for(Piste p: pistesDecollage) {
+			if(p.getFileDAttente().size()>0) {
+				Vol v = p.getFileDAttente().remove(0);
+				System.out.println("Le vol " + v + " vient de décoller");
+			}			
+		}
+	}
 	
 	
 	//Calcul et insère à la position optimal un avion dans la file d'attente
-	public static int calculPositionAtterissage(Piste p, Vol v) {
+	public static int calculPosition(Piste p, Vol v) {
 		int position = p.getFileDAttente().size();
 		for(int i = 0; i< p.getFileDAttente().size(); i++) {
 			if(v.getAvion().getVolCarburant() < p.getFileDAttente().get(i).getAvion().getVolCarburant()) {
