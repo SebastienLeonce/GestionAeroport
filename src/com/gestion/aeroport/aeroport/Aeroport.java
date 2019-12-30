@@ -135,6 +135,37 @@ public class Aeroport {
 		
 		return false;
 	}
+	public boolean ouvrirPiste(int id) {
+		Piste piste = null;
+		
+		for (int i = 0; i < pistesDecollage.size(); i++) {
+	        
+	        if (pistesDecollage.get(i).getId() == id) {
+	        	piste = pistesDecollage.get(i);
+	        }
+	    }
+		
+		if (piste != null && piste.getEnMarche() == false) { 
+			piste.setEnMarche(true);
+			return true;
+		}
+	
+		piste = null;
+		
+		for (int i = 0; i < pistesAtterissage.size(); i++) {
+	       
+	        if (pistesAtterissage.get(i).getId() == id) {
+	        	piste = pistesAtterissage.get(i);
+	        }
+	    }
+		
+		if (piste != null && piste.getEnMarche() == false) { 
+			piste.setEnMarche(true);
+			return true;
+		}
+		
+		return false;
+	}
 	
 	
 	

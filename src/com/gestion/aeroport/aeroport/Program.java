@@ -113,11 +113,14 @@ public class Program {
 					actionValidee = true;
 					switch(action) {
 						case 0:
+							//Penser au modification des files d'attentes
 							System.out.println("Fermeture temporaire d'une piste\n");
 							Program.action0();
 							break;
 						case 1:
+							//Penser au modification des files d'attentes
 							System.out.println("Réouverture d'une piste");
+							Program.action1();
 							break;
 						case 2:
 							System.out.println("Annulation d'un vol");
@@ -168,6 +171,31 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
+	//Ouverture d'une piste
+	private static void action1 () {
+		System.out.println("PistesAtterissage");
+		System.out.println(orly.getPistesAtterissage());
+			
+		System.out.println("PistesDecollage");
+		System.out.println(orly.getPistesDecollage());
+
+		System.out.println("Entrer l'id de la piste que vous voulez ouvrir:\n");
+			
+		boolean actionValidee = false;
+		while(!actionValidee) {
+			Scanner sc = new Scanner(System.in);
+				
+			if(sc.hasNextInt()) {
+				actionValidee = orly.ouvrirPiste(sc.nextInt());	
+				System.out.println("Entrer un id de piste valide ou écriver \"exit\"\n");
+			} else if (sc.hasNext("exit")) {
+				break;
+			}
+		}
+			
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}
 	
 	
 	private static void DemandeAtterissage() {
