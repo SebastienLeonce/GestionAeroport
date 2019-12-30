@@ -1,8 +1,11 @@
 package com.gestion.aeroport.aeroport;
 
+import java.awt.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
@@ -14,6 +17,32 @@ public class Program {
 	public static Aeroport orly;
 	public static ArrayList<Aeroport> autresAeroports;
 	
+	
+	public static enum Destination {
+        LONDRES("Londres"),
+        NY("New-York"), 
+        SINGAPOUR("Singapour"),
+        SIDNEY("Sidney"),
+        MOSCOU("Moscou"),
+        BRATISLAVA("Bratislava");
+        
+		private String destName;
+        private Destination(String d) {
+            this.destName = d;
+        }
+       
+        private static final java.util.List<Destination> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
+		private static final int SIZE = VALUES.size();
+		private static final Random RANDOM = new Random();
+	
+		public static Destination randomDestination()  {
+		    return VALUES.get(RANDOM.nextInt(SIZE));
+		}        
+        @Override
+        public String toString(){
+            return destName;
+        }
+    }
 	
 	
 	
@@ -27,12 +56,12 @@ public class Program {
 						new Piste(2),
 						new Piste(3))));
 		autresAeroports = new ArrayList<Aeroport>(Arrays.asList(
-				new Aeroport("Londres"),
-				new Aeroport("New-York"),
-				new Aeroport("Singapour"),
-				new Aeroport("Sidney"),
-				new Aeroport("Moscou"),
-				new Aeroport("Bratislava")
+				new Aeroport(Destination.LONDRES.toString()),
+				new Aeroport(Destination.NY.toString()),
+				new Aeroport(Destination.SINGAPOUR.toString()),
+				new Aeroport(Destination.SIDNEY.toString()),
+				new Aeroport(Destination.MOSCOU.toString()),
+				new Aeroport(Destination.BRATISLAVA.toString())
 				));
 				 
 		
@@ -55,6 +84,14 @@ public class Program {
 			//Décollage
 			System.out.println("==========Demande de Décollage==========");
 			Program.DemandeDecollage();
+			System.out.println("==========Décollage==========");
+			orly.Decollage();
+			
+			
+			
+			
+			
+			
 			
 			//Choix Action
 			System.out.println("==========Action==========");
@@ -118,7 +155,7 @@ public class Program {
 					pisteValidee = true;
 					
 					if(piste >= 0 &&  piste < orly.getPistesAtterissage().size()) {
-						int position = Aeroport.calculPositionAtterissage(orly.getPistesAtterissage().get(piste), v);
+						int position = Aeroport.calculPosition(orly.getPistesAtterissage().get(piste), v);
 						System.out.println("Le vol à été mis dans la file d'attente à la position : " + (position+1));
 					}
 					else {
@@ -141,7 +178,7 @@ public class Program {
 			ArrayList<Avion> f = c.getFlotte();	
 			Avion a = f.get((int)(Math.random() * f.size()));
 			Aeroport aer = autresAeroports.get((int)(Math.random() * autresAeroports.size()));				
-			Vol v = new Vol(a,orly,aer);
+			Vol v = new Vol(a,aer,orly);
 			orly.getRadar().add(v);
 			
 			System.out.println("Le " + v + " a demandé l'autorisation de décoller.");
@@ -161,7 +198,7 @@ public class Program {
 					pisteValidee = true;
 					
 					if(piste >= 0 &&  piste < orly.getPistesDecollage().size()) {
-						int position = Aeroport.calculPositionAtterissage(orly.getPistesDecollage().get(piste), v);
+						int position = Aeroport.calculPosition(orly.getPistesDecollage().get(piste), v);
 						System.out.println("Le vol à été mis dans la file d'attente à la position : " + (position+1));
 					}
 					else {
