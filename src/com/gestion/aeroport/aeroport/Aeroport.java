@@ -59,6 +59,9 @@ public class Aeroport {
 	public void setRadar(ArrayList<Vol> radar) {
 		this.radar = radar;
 	}
+	public ArrayList<Passager> getPassagersDansAeroport() {
+		return passagersDansAeroport;
+	}
 	@Override
 	public String toString() {
 		return "Aeroport [nom=" + nom + ", pistesDecollage=" + pistesDecollage + ", pistesAtterissage="

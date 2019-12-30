@@ -88,10 +88,12 @@ public class Program {
 			System.out.println("==========Décollage==========");
 			orly.Decollage();*/
 			
+			System.out.println(orly.getPassagersDansAeroport());
 			
 			
-			
-			
+			//file d'attente pour chaque destination
+			//Generer des gros paquet de passager
+			// Regarder si on peut faire un avion de ligne
 			
 			
 			//Choix Action
@@ -241,6 +243,7 @@ public class Program {
 			}
 		}
 	}
+	
 	private static void DemandeDecollage() {
 		//Entre 1 et 2 nouveaux avions souhaitant décoller
 		int random = 1 + (int)(Math.random() * ((2-1) + 1 ));
