@@ -1,5 +1,6 @@
 package com.gestion.aeroport.passager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.gestion.aeroport.aeroport.Compagnie;
@@ -39,13 +40,21 @@ public class Personnel extends Passager {
 	public Compagnie getCompagnie() {
 		return compagnie;
 	}
+	
+	public static ArrayList<Personnel> generate(int n, Compagnie c){
+		ArrayList<Personnel> personnels = new ArrayList<Personnel>();
+		for (int i = 0 ; i < n ; i++) {
+			personnels.add(new Personnel(c));
+		}
+		return personnels;
+	}
 
 	/**
 	 * 
 	 */
 	@Override
 	public String toString() {
-		return 	super.toString() + 
-				"\tcompagnie       = " + compagnie;
+		return 	super.toString(); /*+ 
+				"\tcompagnie       = " + compagnie;*/
 	}
 }

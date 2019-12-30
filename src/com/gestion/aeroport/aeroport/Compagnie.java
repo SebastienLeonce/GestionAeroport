@@ -63,14 +63,17 @@ public class Compagnie {
 				data = sc.nextLine().split(","); 			
 				int nbPilotes = 10 + (int)(Math.random() * ((50-10) + 1 ));
 				int nbAvions = (10 + (int)(Math.random() * ((50-10) + 1 )))/2;
+				int nbPersonnels = (10 + (int)(Math.random() * ((50-10) + 1 )))*3;
 
 				Compagnie comp = new Compagnie(data[1], data[6]);
 				
 				ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
 				ArrayList<Avion>  avions = Avion.generate(nbAvions, comp);
-				// rajouter personnel et avion diplomatique
+				ArrayList<Personnel>  personnels = Personnel.generate(nbPersonnels, comp);
+				//avion diplo ?
 				comp.setPilotes(pilotes);
 				comp.setFlotte(avions);
+				comp.setPersonnels(personnels);
 				
 				compagnies.add(comp);
 			}
@@ -112,28 +115,9 @@ public class Compagnie {
 		this.personnels = personnels;
 	}
 
-	/*public static void main (String[] args) throws IOException {
-		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat");
-		Scanner sc = new Scanner(url.openStream()); 
+	public static void main (String[] args) throws IOException {
+		ArrayList<Compagnie> compagnies = Compagnie.generate(2);
 		
-		String[] data;
-		
-		List<Avion>  flotte = new ArrayList<Avion>();
-		List<Pilote> pilotes = new ArrayList<Pilote>();
-		List<Personnel> personnels = new ArrayList<Personnel>();
-		
-		Compagnie compagnie;
-		boolean flag = true;
-		
-		while (sc.hasNextLine()) {
-			data = sc.nextLine().split(","); 
-			
-			if (flag) {flag = false; continue;}
-			
-			compagnie = new Compagnie(data[1], data[6], flotte, pilotes, personnels);
-			System.out.println(compagnie.toString());
-		}
-		
-		sc.close();
-	}*/
+		System.out.println(compagnies);
+	}
 }
