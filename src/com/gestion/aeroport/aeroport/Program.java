@@ -113,7 +113,6 @@ public class Program {
 					actionValidee = true;
 					switch(action) {
 						case 0:
-							//Penser au modification des files d'attentes
 							System.out.println("Fermeture temporaire d'une piste\n");
 							Program.action0();
 							break;
@@ -126,6 +125,7 @@ public class Program {
 							System.out.println("Annulation d'un vol");
 							break;
 						case 3:
+							//modification file d'attente de l'avion
 							System.out.println("Passage en priorité d'un vol");
 							break;
 						case 4:

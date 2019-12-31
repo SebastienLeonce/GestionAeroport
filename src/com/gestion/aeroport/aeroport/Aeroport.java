@@ -187,11 +187,13 @@ public class Aeroport {
 	        if (pistesDecollage.get(i).getId() == id) {
 	        	piste = pistesDecollage.get(i);
 	        }
+	        //if en marche // enmarche++ // 
 	    }
 		
 		// on ouvre une piste de decollage
 		if (piste != null && piste.getEnMarche() == false) { 
 			piste.setEnMarche(true);
+			// for // piste a prendre enMarche / (n - 1) // rajouter dans la piste ouverte
 			return true;
 		}
 	
