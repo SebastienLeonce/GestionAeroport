@@ -77,7 +77,7 @@ public class Program {
 		while(programRunning) {
 			
 			//Attérissage
-			/*System.out.println("==========Demande d'Attérissage==========");
+			System.out.println("==========Demande d'Attérissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Attérissage==========");
 			orly.Atterissage();
@@ -86,9 +86,7 @@ public class Program {
 			System.out.println("==========Demande de Décollage==========");
 			Program.DemandeDecollage();
 			System.out.println("==========Décollage==========");
-			orly.Decollage();*/
-			
-			System.out.println(orly.getPassagersDansAeroport());
+			orly.Decollage();
 			
 			
 			//file d'attente pour chaque destination

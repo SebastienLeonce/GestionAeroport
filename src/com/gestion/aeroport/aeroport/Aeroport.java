@@ -102,6 +102,9 @@ public class Aeroport {
 	public boolean eteindrePiste(int id) {
 		int enMarche = 0;
 		Piste piste = null;
+		ArrayList<ArrayList<Vol>> parts;
+		ArrayList<Vol> fileAttente = new ArrayList<Vol>();
+		int k = 0;
 		
 		for (int i = 0; i < pistesDecollage.size(); i++) {
 	        if (pistesDecollage.get(i).getEnMarche()) {
@@ -113,8 +116,25 @@ public class Aeroport {
 	        }
 	    }
 		
+		// on ferme une piste de decollage
 		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
 			piste.setEnMarche(false);
+			
+			parts = chopped(piste.getFileDAttente(), enMarche - 1);
+			
+			piste.setFileDAttente(new ArrayList<Vol>());
+			
+			for (int i = 0; i < pistesDecollage.size(); i++) {
+				if (pistesDecollage.get(i).getEnMarche()) {
+					fileAttente.addAll(pistesDecollage.get(i).getFileDAttente());
+					fileAttente.addAll(parts.get(k));
+
+					pistesDecollage.get(i).setFileDAttente(fileAttente);
+					
+					k++;
+				}
+			}
+			
 			return true;
 		}
 		
@@ -131,13 +151,34 @@ public class Aeroport {
 	        }
 	    }
 		
+		// on ferme une piste d'atterissage
 		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
 			piste.setEnMarche(false);
+			
+			parts = chopped(piste.getFileDAttente(), enMarche - 1);
+			
+			piste.setFileDAttente(new ArrayList<Vol>());
+			
+			for (int i = 0; i < pistesAtterissage.size(); i++) {
+				if (pistesAtterissage.get(i).getEnMarche()) {
+					fileAttente.addAll(pistesAtterissage.get(i).getFileDAttente());
+					fileAttente.addAll(parts.get(k));
+
+					pistesAtterissage.get(i).setFileDAttente(fileAttente);
+					
+					k++;
+				}
+			}
+			
 			return true;
 		}
 		
 		return false;
 	}
+	
+	////////////////////////////////////////////////////
+	//       partage de file d'attente a faire        //
+	////////////////////////////////////////////////////
 	public boolean ouvrirPiste(int id) {
 		Piste piste = null;
 		
@@ -148,6 +189,7 @@ public class Aeroport {
 	        }
 	    }
 		
+		// on ouvre une piste de decollage
 		if (piste != null && piste.getEnMarche() == false) { 
 			piste.setEnMarche(true);
 			return true;
@@ -162,6 +204,7 @@ public class Aeroport {
 	        }
 	    }
 		
+		// on ouvre une piste d'atterissage
 		if (piste != null && piste.getEnMarche() == false) { 
 			piste.setEnMarche(true);
 			return true;
@@ -170,6 +213,17 @@ public class Aeroport {
 		return false;
 	}
 	
+	// Decoupe une arrayList en L arrayList
+	static <T> ArrayList<ArrayList<T>> chopped(ArrayList<T> list, final int L) {
+		ArrayList<ArrayList<T>> parts = new ArrayList<ArrayList<T>>();
+	    final int N = list.size();
+	    for (int i = 0; i < N; i += L) {
+	        parts.add(new ArrayList<T>(
+	            list.subList(i, Math.min(N, i + L)))
+	        );
+	    }
+	    return parts;
+	}
 	
 	
 }

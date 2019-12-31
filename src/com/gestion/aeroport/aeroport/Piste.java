@@ -24,7 +24,13 @@ public class Piste {
     public ArrayList<Vol> getFileDAttente(){
         return this.fileDAttente;
     }
-    public int getEspacement(){
+    
+    public void setFileDAttente(ArrayList<Vol> fileDAttente) {
+		this.fileDAttente = fileDAttente;
+	}
+
+
+	public int getEspacement(){
         return this.espacement;
     }
     
