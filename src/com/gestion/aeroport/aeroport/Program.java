@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.passager.Pilote;
-import com.gestion.aeroport.aeroport.Piste;
 public class Program {
 
 	public static final int NB_COMPAGNIES = 5;
@@ -72,7 +72,15 @@ public class Program {
 		
 		compagnies = Compagnie.generate(Program.NB_COMPAGNIES);
 		for(int i = 0; i < Program.NB_COMPAGNIES ; i++) {
-			orly.getFileAttentePilote().put(compagnies.get(i),new ArrayList<Pilote>());
+			Compagnie c = compagnies.get(i);
+			orly.getFileAttentePilote().put(c,new LinkedList<Pilote>());
+			
+			//De 1 à 8 pilotes en attentes
+			int random = 1 + (int)(Math.random() * ((8-1) + 1 ));
+			for(int j = 0; j < random; j++) {
+				orly.getFileAttentePilote().get(c).add(new Pilote(c));
+			}
+			
 		}
 		
 		avionEnVol = new ArrayList<Avion>();		
@@ -85,21 +93,23 @@ public class Program {
 		while(programRunning) {
 			
 			//Attï¿½rissage
-			System.out.println("==========Demande d'Attï¿½rissage==========");
+			/*System.out.println("==========Demande d'Attï¿½rissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Attï¿½rissage==========");
-			orly.Atterissage();
+			orly.Atterissage();*/
 			
 			//Dï¿½collage
-			System.out.println("==========Demande de Dï¿½collage==========");
+			/*System.out.println("==========Demande de Dï¿½collage==========");
 			Program.DemandeDecollage();
 			System.out.println("==========Dï¿½collage==========");
-			orly.Decollage();
+			orly.Decollage();*/
 			
 			//Arrivï¿½e de Passager et remplissage des vols
+			orly.generateVol();
+			System.out.println(orly.getVolsEnPreparation());
 			orly.ArriveePassagerDansAeroport();
+			System.out.println(orly.getPassagersDansAeroport());
 			orly.RemplissageVol();
-			
 			
 			
 			

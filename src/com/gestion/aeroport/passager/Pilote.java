@@ -12,7 +12,6 @@ public class Pilote extends Passager {
 	private Compagnie employeur;
 	private int passagersMax;
 	private int tempsPause;
-	private boolean enVol;
 	/**
 	 * 
 	 * @param prenom
@@ -30,7 +29,6 @@ public class Pilote extends Passager {
 		this.employeur = employeur;
 		this.passagersMax = passagersMax;
 		this.tempsPause = tempsPause;
-		this.enVol = false;
 	}
 	
 	/**
@@ -45,14 +43,6 @@ public class Pilote extends Passager {
 	}
 	
 	
-	
-	public boolean isEnVol() {
-		return enVol;
-	}
-
-	public void setEnVol(boolean enVol) {
-		this.enVol = enVol;
-	}
 	/**
 	 * 
 	 * @return

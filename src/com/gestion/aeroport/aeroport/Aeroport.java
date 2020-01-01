@@ -2,7 +2,7 @@ package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.passager.Passager;
@@ -23,7 +23,7 @@ public class Aeroport {
 	private ArrayList<Vol> volsEnPreparation;
 	private ArrayList<Passager> passagersDansAeroport;
 	
-	private HashMap<Compagnie, ArrayList<Pilote>> fileAttentePilote;
+	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
 	
 	public Aeroport(String nom) {
 		this.nom = nom;
@@ -40,7 +40,7 @@ public class Aeroport {
 		
 		this.pistesDecollage = pistesDecollage;
 		this.pistesAtterissage = pistesAtterissage;
-		this.fileAttentePilote = new HashMap<Compagnie, ArrayList<Pilote>>();
+		this.fileAttentePilote = new HashMap<Compagnie, Queue<Pilote>>();
 	}
 	
 	
@@ -50,17 +50,14 @@ public class Aeroport {
 	public void setVolsEnPreparation(ArrayList<Vol> volsEnPreparation) {
 		this.volsEnPreparation = volsEnPreparation;
 	}
-	public ArrayList<Passager> getPassagersDansAeroport() {
-		return passagersDansAeroport;
-	}
 	public void setPassagersDansAeroport(ArrayList<Passager> passagersDansAeroport) {
 		this.passagersDansAeroport = passagersDansAeroport;
 	}
 	
-	public HashMap<Compagnie, ArrayList<Pilote>> getFileAttentePilote() {
+	public HashMap<Compagnie, Queue<Pilote>> getFileAttentePilote() {
 		return fileAttentePilote;
 	}
-	public void setFileAttentePilote(HashMap<Compagnie, ArrayList<Pilote>> fileAttentePilote) {
+	public void setFileAttentePilote(HashMap<Compagnie, Queue<Pilote>> fileAttentePilote) {
 		this.fileAttentePilote = fileAttentePilote;
 	}
 	public ArrayList<Piste> getPistesDecollage() {
@@ -98,36 +95,39 @@ public class Aeroport {
 	
 	
 	/**
-	 * Genere un vol
-	 * MANQUE DE PILOTES NON VERIFIE
-	 * @param depart
+	 * Genere un vol de la compagnies qui a le plus de pilote en attente
+	 * Prend les pilotes d'une file d'attente d'une compagnie et les places dans un vol
+	 * Si un vol a été créer il en enregistré dans this.volsEnPreparation
+	 * @return true si un vol a été créer, false sinon
 	 */
-	public void generateVol(Aeroport depart) {
+	public boolean generateVol() {
 		
-		this.fileAttentePilote.forEach((k, v) ->{
-			System.out.format("key: %s, value: %d%n", k, v);
-		});
-		
-		Compagnie c = Program.compagnies.get((int)(Math.random() * Program.compagnies.size()));
-		ArrayList<Avion> f = c.getFlotte();	
-		
-		Avion a = f.get((int)(Math.random() * f.size()));
-		ArrayList<Pilote> pilotes = c.getPilotes();
-		
-		int compt = 0; 
-		while(compt < a.getNbPilotesMin()) {
-			Pilote p = pilotes.get((int)(Math.random() * f.size()));
-			if(!p.isEnVol()) {
-				a.ajouterPilote(p);
-				p.setEnVol(true);
-				compt++;
+		Compagnie c = null;
+		int maxPiloteAttente = 0;
+		for(Compagnie comp : Program.compagnies) {
+			if(this.fileAttentePilote.get(comp).size() > maxPiloteAttente) {
+				c = comp;
+				maxPiloteAttente = this.fileAttentePilote.get(comp).size();
 			}
 		}
+		if(c != null) {
+			ArrayList<Avion> f = c.getFlotte();
+			Avion a = f.get((int)(Math.random() * f.size()));
+			
+			if(this.fileAttentePilote.get(c).size() >= a.getNbPilotesMin()) {
+				for (int i  = 0 ; i < a.getNbPilotesMin(); i++) {
+					a.ajouterPilote(this.fileAttentePilote.get(c).remove());
+				}
+				
+				Aeroport aer = Program.autresAeroports.get((int)(Math.random() * Program.autresAeroports.size()));				
+				Vol v = new Vol(a,aer,this);
+				this.volsEnPreparation.add(v);
+				return true;
+			}
+		}
+			
+		return false;
 		
-		
-		Aeroport aer = Program.autresAeroports.get((int)(Math.random() * Program.autresAeroports.size()));				
-		Vol v = new Vol(a,depart,aer);
-		this.volsEnPreparation.add(v);
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public class Aeroport {
 			for(Passager p : this.passagersDansAeroport) {
 				if(p.getVoyage() == v.getArrivee().getNom()) {
 					v.getOccupants().add(p);
-					this.passagersDansAeroport.remove(p);
+					//this.passagersDansAeroport.remove(p);
 				}
 			}
 		}
@@ -172,7 +172,7 @@ public class Aeroport {
 					if(passager.getClass() == Pilote.class) {
 						Pilote pilote = (Pilote)passager;
 						this.passagersDansAeroport.add(pilote);
-						pilote.setEnVol(false);
+						this.fileAttentePilote.get(pilote.getEmployeur()).add(pilote);
 					}
 				}
 				
