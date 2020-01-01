@@ -1,6 +1,5 @@
 package com.gestion.aeroport.aeroport;
 
-import java.awt.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,9 +8,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.passager.Pilote;
 
 public class Program {
 
+	public static final int NB_COMPAGNIES = 5;
+	
 	public static ArrayList<Compagnie> compagnies;
 	public static ArrayList<Avion> avionEnVol;
 	public static Aeroport orly;
@@ -68,10 +70,17 @@ public class Program {
 		System.out.println("Bienvenue dans le système de gestion de l'aéroport d'Orly.");
 		System.out.println("Initialisation du système, veuillez patientez...");
 		
-		compagnies = Compagnie.generate(5);
+		compagnies = Compagnie.generate(Program.NB_COMPAGNIES);
+		for(int i = 0; i < Program.NB_COMPAGNIES ; i++) {
+			orly.getFileAttentePilote().put(compagnies.get(i),new ArrayList<Pilote>());
+		}
+		
 		avionEnVol = new ArrayList<Avion>();		
 		
 		boolean programRunning = true;
+		
+		
+		
 		
 		while(programRunning) {
 			
@@ -87,7 +96,9 @@ public class Program {
 			System.out.println("==========Décollage==========");
 			orly.Decollage();
 			
-			
+			//Arrivée de Passager et remplissage des vols
+			orly.ArriveePassagerDansAeroport();
+			orly.RemplissageVol();
 			
 			
 			
