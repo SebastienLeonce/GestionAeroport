@@ -15,6 +15,7 @@ public class Aeroport {
 	private static final int  MAX_ARRIVEE_PASSAGER = 50;
 	
 	private String nom;
+	
 	private ArrayList<Piste> pistesDecollage;
 	private ArrayList<Piste> pistesAtterissage; 
 	private ArrayList<Vol> radar;
@@ -86,6 +87,9 @@ public class Aeroport {
 	public void setRadar(ArrayList<Vol> radar) {
 		this.radar = radar;
 	}
+	public ArrayList<Passager> getPassagersDansAeroport() {
+		return passagersDansAeroport;
+	}
 	@Override
 	public String toString() {
 		return "Aeroport [nom=" + nom + ", pistesDecollage=" + pistesDecollage + ", pistesAtterissage="
@@ -127,8 +131,8 @@ public class Aeroport {
 	}
 	
 	/**
-	 * Créer de nouveaux passagers dans l'aéroport avec une destination random
-	 * @return nombre de passager créé
+	 * Crï¿½er de nouveaux passagers dans l'aï¿½roport avec une destination random
+	 * @return nombre de passager crï¿½ï¿½
 	 */
 	public int ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
@@ -139,7 +143,7 @@ public class Aeroport {
 	}
 	
 	/**
-	 * Rempli les vols en attente avec des passagers dans l'aéroport
+	 * Rempli les vols en attente avec des passagers dans l'aï¿½roport
 	 */
 	public void RemplissageVol() {
 		for(Vol v : this.volsEnPreparation) {
@@ -154,14 +158,14 @@ public class Aeroport {
 	
 	
 	/**
-	 * Fait attérir les avion en première place de la file d'attente
-	 * ESPACEMENT NON GéRé
+	 * Fait attï¿½rir les avion en premiï¿½re place de la file d'attente
+	 * ESPACEMENT NON Gï¿½Rï¿½
 	 */
 	public void Atterissage() {
 		for(Piste p: pistesAtterissage) {
 			if(p.getFileDAttente().size()>0) {
 				Vol v = p.getFileDAttente().remove(0);
-				System.out.println("Le vol " + v + " vient d'attérir");
+				System.out.println("Le vol " + v + " vient d'attï¿½rir");
 				
 				//Seul les pilotes restent dans l'aeroport
 				for(Passager passager : v.getAvion().getPassagers()) {
@@ -176,21 +180,21 @@ public class Aeroport {
 		}
 	}
 	/**
-	 * Fait décoler les avion en première place de la file d'attente
-	 * ESPACEMENT NON GéRé
+	 * Fait dï¿½coler les avion en premiï¿½re place de la file d'attente
+	 * ESPACEMENT NON Gï¿½Rï¿½
 	 */
 	public void Decollage() {
 		for(Piste p: pistesDecollage) {
 			if(p.getFileDAttente().size()>0) {
 				Vol v = p.getFileDAttente().remove(0);
-				System.out.println("Le vol " + v + " vient de décoller");
+				System.out.println("Le vol " + v + " vient de dï¿½coller");
 			}			
 		}
 	}
 	
 	
 	/**
-	 * Calcul et insère un vol sur une piste en foction de son carburant
+	 * Calcul et insï¿½re un vol sur une piste en foction de son carburant
 	 */
 	public static int calculPosition(Piste p, Vol v) {
 		int position = p.getFileDAttente().size();
@@ -203,7 +207,133 @@ public class Aeroport {
 		p.getFileDAttente().add(position, v);
 		return position;
 	}
+	public boolean eteindrePiste(int id) {
+		int enMarche = 0;
+		Piste piste = null;
+		ArrayList<ArrayList<Vol>> parts;
+		ArrayList<Vol> fileAttente = new ArrayList<Vol>();
+		int k = 0;
+		
+		for (int i = 0; i < pistesDecollage.size(); i++) {
+	        if (pistesDecollage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        }
+	        
+	        if (pistesDecollage.get(i).getId() == id) {
+	        	piste = pistesDecollage.get(i);
+	        }
+	    }
+		
+		// on ferme une piste de decollage
+		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
+			piste.setEnMarche(false);
+			
+			parts = chopped(piste.getFileDAttente(), enMarche - 1);
+			
+			piste.setFileDAttente(new ArrayList<Vol>());
+			
+			for (int i = 0; i < pistesDecollage.size(); i++) {
+				if (pistesDecollage.get(i).getEnMarche()) {
+					fileAttente.addAll(pistesDecollage.get(i).getFileDAttente());
+					fileAttente.addAll(parts.get(k));
+
+					pistesDecollage.get(i).setFileDAttente(fileAttente);
+					
+					k++;
+				}
+			}
+			
+			return true;
+		}
+		
+		enMarche = 0;
+		piste = null;
+		
+		for (int i = 0; i < pistesAtterissage.size(); i++) {
+	        if (pistesAtterissage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        }
+	        
+	        if (pistesAtterissage.get(i).getId() == id) {
+	        	piste = pistesAtterissage.get(i);
+	        }
+	    }
+		
+		// on ferme une piste d'atterissage
+		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
+			piste.setEnMarche(false);
+			
+			parts = chopped(piste.getFileDAttente(), enMarche - 1);
+			
+			piste.setFileDAttente(new ArrayList<Vol>());
+			
+			for (int i = 0; i < pistesAtterissage.size(); i++) {
+				if (pistesAtterissage.get(i).getEnMarche()) {
+					fileAttente.addAll(pistesAtterissage.get(i).getFileDAttente());
+					fileAttente.addAll(parts.get(k));
+
+					pistesAtterissage.get(i).setFileDAttente(fileAttente);
+					
+					k++;
+				}
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
 	
+	////////////////////////////////////////////////////
+	//       partage de file d'attente a faire        //
+	////////////////////////////////////////////////////
+	public boolean ouvrirPiste(int id) {
+		Piste piste = null;
+		
+		for (int i = 0; i < pistesDecollage.size(); i++) {
+	        
+	        if (pistesDecollage.get(i).getId() == id) {
+	        	piste = pistesDecollage.get(i);
+	        }
+	        //if en marche // enmarche++ // 
+	    }
+		
+		// on ouvre une piste de decollage
+		if (piste != null && piste.getEnMarche() == false) { 
+			piste.setEnMarche(true);
+			// for // piste a prendre enMarche / (n - 1) // rajouter dans la piste ouverte
+			return true;
+		}
+	
+		piste = null;
+		
+		for (int i = 0; i < pistesAtterissage.size(); i++) {
+	       
+	        if (pistesAtterissage.get(i).getId() == id) {
+	        	piste = pistesAtterissage.get(i);
+	        }
+	    }
+		
+		// on ouvre une piste d'atterissage
+		if (piste != null && piste.getEnMarche() == false) { 
+			piste.setEnMarche(true);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// Decoupe une arrayList en L arrayList
+	static <T> ArrayList<ArrayList<T>> chopped(ArrayList<T> list, final int L) {
+		ArrayList<ArrayList<T>> parts = new ArrayList<ArrayList<T>>();
+	    final int N = list.size();
+	    for (int i = 0; i < N; i += L) {
+	        parts.add(new ArrayList<T>(
+	            list.subList(i, Math.min(N, i + L)))
+	        );
+	    }
+	    return parts;
+	}
 	
 	
 }
