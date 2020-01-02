@@ -2,6 +2,7 @@ package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
@@ -11,8 +12,8 @@ import com.gestion.aeroport.passager.Pilote;
 
 public class Aeroport {
 
-	private static final int  MIN_ARRIVEE_PASSAGER = 20;
-	private static final int  MAX_ARRIVEE_PASSAGER = 50;
+	private static final int  MIN_ARRIVEE_PASSAGER = 100;
+	private static final int  MAX_ARRIVEE_PASSAGER = 200;
 	
 	private String nom;
 	
@@ -145,12 +146,21 @@ public class Aeroport {
 	/**
 	 * Rempli les vols en attente avec des passagers dans l'aï¿½roport
 	 */
-	public void RemplissageVol() {
-		for(Vol v : this.volsEnPreparation) {
-			for(Passager p : this.passagersDansAeroport) {
+	public void RemplissageVol() {		
+		Iterator<Vol> i = this.volsEnPreparation.iterator();
+		while (i.hasNext()) {
+			Vol v = i.next();
+			Iterator<Passager> j = this.passagersDansAeroport.iterator();
+			while (j.hasNext()) {
+				Passager p = j.next();			
 				if(p.getVoyage() == v.getArrivee().getNom()) {
-					v.getOccupants().add(p);
-					//this.passagersDansAeroport.remove(p);
+					v.getAvion().ajouterPassager(p);
+					j.remove();
+				}
+				if(v.getNbPersonneABord() == v.getAvion().getCapaciteMax()) {
+					Program.DemandeDecollage(v);
+					i.remove();
+					break;
 				}
 			}
 		}
@@ -163,20 +173,26 @@ public class Aeroport {
 	 */
 	public void Atterissage() {
 		for(Piste p: pistesAtterissage) {
-			if(p.getFileDAttente().size()>0) {
-				Vol v = p.getFileDAttente().remove(0);
-				System.out.println("Le vol " + v + " vient d'attï¿½rir");
-				
-				//Seul les pilotes restent dans l'aeroport
-				for(Passager passager : v.getAvion().getPassagers()) {
-					if(passager.getClass() == Pilote.class) {
-						Pilote pilote = (Pilote)passager;
-						this.passagersDansAeroport.add(pilote);
-						this.fileAttentePilote.get(pilote.getEmployeur()).add(pilote);
+			if(p.getCooldown() >= p.getEspacement()) {
+				if(p.getFileDAttente().size()>0) {
+					Vol v = p.getFileDAttente().remove(0);
+					System.out.println("Le vol " + v + " vient d'attï¿½rir");
+					
+					//Seul les pilotes restent dans l'aeroport
+					for(Passager passager : v.getAvion().getPassagers()) {
+						if(passager.getClass() == Pilote.class) {
+							Pilote pilote = (Pilote)passager;
+							this.passagersDansAeroport.add(pilote);
+							this.fileAttentePilote.get(pilote.getEmployeur()).add(pilote);
+						}
 					}
+					p.setCooldown(0);
 				}
-				
-			}			
+			}
+			else {
+				p.setCooldown(p.getCooldown()+1);
+				System.out.println("Piste en cours de préparation\\n=======================");
+			}
 		}
 	}
 	/**
@@ -185,10 +201,16 @@ public class Aeroport {
 	 */
 	public void Decollage() {
 		for(Piste p: pistesDecollage) {
-			if(p.getFileDAttente().size()>0) {
-				Vol v = p.getFileDAttente().remove(0);
-				System.out.println("Le vol " + v + " vient de dï¿½coller");
-			}			
+			if(p.getCooldown() >= p.getEspacement()) {
+				if(p.getFileDAttente().size()>0) {
+					Vol v = p.getFileDAttente().remove(0);
+					System.out.println("Le vol " + v + " vient de dï¿½coller");
+				}
+			}
+			else {
+				p.setCooldown(p.getCooldown()+1);
+				System.out.println("Piste en cours de préparation\n=======================");
+			}
 		}
 	}
 	

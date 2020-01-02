@@ -6,6 +6,7 @@ public class Piste {
 
     private ArrayList<Vol> fileDAttente;
     private int espacement;
+    private int cooldown;
     private boolean enMarche;
     private int id;
     private  static  int compteur =  0 ;
@@ -14,14 +15,24 @@ public class Piste {
     Piste(final int espacement){
         this.fileDAttente = new ArrayList<Vol>();
         this.espacement = espacement;
+        this.cooldown = espacement;
         this.enMarche = true;
         this.id = compteur;
         
         compteur++;
     }
 
+   
+    
 
-    public ArrayList<Vol> getFileDAttente(){
+    public int getCooldown() {
+		return cooldown;
+	}
+	public void setCooldown(int cooldown) {
+		this.cooldown = cooldown;
+	}
+
+	public ArrayList<Vol> getFileDAttente(){
         return this.fileDAttente;
     }
     

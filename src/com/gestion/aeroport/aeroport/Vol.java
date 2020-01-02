@@ -3,6 +3,7 @@ package com.gestion.aeroport.aeroport;
 import java.util.ArrayList;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.avion.AvionLigne;
 import com.gestion.aeroport.passager.Passager;
 
 public class Vol {
@@ -10,12 +11,10 @@ public class Vol {
     private static int compteur = 1;
     private int numeroDeVol;
 	private Avion avion;
-    private ArrayList<Passager> occupants;
     private Aeroport aeroportArrivee;
     private Aeroport aeroportDepart;
 
     public Vol(Avion avion, Aeroport arrivee, Aeroport depart){
-        this.occupants = new ArrayList<Passager>();
         this.aeroportArrivee = arrivee;
         this.aeroportDepart = depart;
         this.avion = avion;
@@ -26,10 +25,16 @@ public class Vol {
     public Avion getAvion(){
         return this.avion;
     }
-    public ArrayList<Passager> getOccupants(){
-        return this.occupants;
-    }
-    public Aeroport getDepart(){
+    public int getNbPersonneABord() {
+		int nb = this.avion.getNbPilotes() + this.avion.getPassagers().size();
+		if(this.avion.getClass() == AvionLigne.class) {
+			AvionLigne a = (AvionLigne)this.avion;
+			nb += a.getNbPersonnels();
+		}
+		return nb;
+	}
+
+	public Aeroport getDepart(){
         return this.aeroportDepart;
     }
     public Aeroport getArrivee(){
@@ -42,7 +47,7 @@ public class Vol {
 				"\t" + avion + "\n" +
 				"\tEn provenance de : " + aeroportDepart.getNom() + "\n" +
 				"\tA destination de : " + aeroportArrivee.getNom() + "\n" +
-				"\tAvec " + occupants.size() + " occupants à bord \n";
+				"\tAvec " + this.getNbPersonneABord() + " occupants à bord \n";
 	}
     
 }

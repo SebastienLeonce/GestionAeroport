@@ -36,6 +36,14 @@ public class AvionLigne extends Avion {
 		return false;
 	}
 	
+	public int getNbPersonnels() {
+		return nbPersonnels;
+	}
+
+	public List<Personnel> getPersonnels() {
+		return personnels;
+	}
+
 	@Override
 	public String toString() {
 		return "Avion de Ligne :  " +super.toString();

@@ -12,6 +12,16 @@ import com.gestion.aeroport.passager.Pilote;
 
 public abstract class Avion {
 	
+	public static final int CAPACITE_MIN = 100;
+	public static final int CAPACITE_MAX = 600;
+	public static final int CARBURANT_MIN = 200;
+	public static final int CARBURANT_MAX = 600;
+	public static final int PILOTE_MIN = 1;
+	public static final int PILOTE_MAX = 3;
+	public static final int PERSONNEL_MIN = 5;
+	public static final int PERSONNEL_MAX = 10;
+	
+	
 	private String modele;
 	private int capaciteMax;
 	private int capacite = 0;
@@ -74,15 +84,15 @@ public abstract class Avion {
 			if(sc.hasNextLine()) {
 				data = sc.nextLine().split(","); 
 				
-				int capacite = 300 + (int)(Math.random() * ((600-300) + 1 ));
-				int nbPilotes = 1 + (int)(Math.random() * ((3-1) + 1 ));
-				int nbPersonnels = 5 + (int)(Math.random() * ((15-5) + 5 ));
+				int capacite = CAPACITE_MIN + (int)(Math.random() * ((CAPACITE_MAX-CAPACITE_MIN) + 1 ));
+				int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX-PILOTE_MIN) + 1 ));
 				float poidsBagagesMax = capacite*40;
-				float volCarburant = 200 + (int)(Math.random() * ((400-200) + 1 ));
+				float volCarburant = CARBURANT_MIN + (int)(Math.random() * ((CARBURANT_MAX-CARBURANT_MIN) + 1 ));
 			
 				if (c.getNom().equals("\"Private flight\"")) {
 					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes, new Passager("null")));
 				} else {
+					int nbPersonnels = PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 ));
 					avions.add(new AvionLigne(data[0], capacite, poidsBagagesMax, volCarburant, nbPilotes, nbPersonnels, c));
 				}
 			}
@@ -94,6 +104,10 @@ public abstract class Avion {
 	}
 	
 	
+	public void setVolCarburant(float volCarburant) {
+		this.volCarburant = volCarburant;
+	}
+
 	public String getModele() {
 		return modele;
 	}
