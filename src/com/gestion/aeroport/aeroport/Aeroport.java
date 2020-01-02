@@ -18,18 +18,21 @@ public class Aeroport {
 	private String nom;
 	
 	private ArrayList<Piste> pistesDecollage;
-	private ArrayList<Piste> pistesAtterissage; 
+	private ArrayList<Piste> pistesAtterrissage; 
 	private ArrayList<Vol> radar;
+	
 	
 	private ArrayList<Vol> volsEnPreparation;
 	private ArrayList<Passager> passagersDansAeroport;
 	
+	private HashMap<Compagnie, ArrayList<Avion>> avionsAuSol;
 	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
+	private HashMap<Program.Destination, Queue<Passager>> fileAttentePassager;
 	
 	public Aeroport(String nom) {
 		this.nom = nom;
 	}
-	public Aeroport(String nom, ArrayList<Piste> pistesAtterissage, ArrayList<Piste> pistesDecollage) {
+	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
 		
 		//
@@ -40,11 +43,19 @@ public class Aeroport {
 		this.volsEnPreparation = new ArrayList<Vol>();		
 		
 		this.pistesDecollage = pistesDecollage;
-		this.pistesAtterissage = pistesAtterissage;
+		this.pistesAtterrissage = pistesAtterrissage;
 		this.fileAttentePilote = new HashMap<Compagnie, Queue<Pilote>>();
+		this.fileAttentePassager = new HashMap<Program.Destination, Queue<Passager>>();
+		this.avionsAuSol = new HashMap<Compagnie, ArrayList<Avion>>();
 	}
 	
 	
+	public HashMap<Compagnie, ArrayList<Avion>> getAvionsAuSol() {
+		return avionsAuSol;
+	}
+	public void setAvionsAuSol(HashMap<Compagnie, ArrayList<Avion>> avionsAuSol) {
+		this.avionsAuSol = avionsAuSol;
+	}
 	public ArrayList<Vol> getVolsEnPreparation() {
 		return volsEnPreparation;
 	}
@@ -67,11 +78,11 @@ public class Aeroport {
 	public void setPistesDecollage(ArrayList<Piste> pistesDecollage) {
 		this.pistesDecollage = pistesDecollage;
 	}
-	public ArrayList<Piste> getPistesAtterissage() {
-		return pistesAtterissage;
+	public ArrayList<Piste> getPistesAtterrissage() {
+		return pistesAtterrissage;
 	}
-	public void setPistesAtterissage(ArrayList<Piste> pistesAtterissage) {
-		this.pistesAtterissage = pistesAtterissage;
+	public void setPistesAtterrissage(ArrayList<Piste> pistesAtterrissage) {
+		this.pistesAtterrissage = pistesAtterrissage;
 	}
 	public String getNom() {
 		return nom;
@@ -90,8 +101,8 @@ public class Aeroport {
 	}
 	@Override
 	public String toString() {
-		return "Aeroport [nom=" + nom + ", pistesDecollage=" + pistesDecollage + ", pistesAtterissage="
-				+ pistesAtterissage + ", radar=" + radar + "]";
+		return "Aeroport [nom=" + nom + ", pistesDecollage=" + pistesDecollage + ", pistesAtterrissage="
+				+ pistesAtterrissage + ", radar=" + radar + "]";
 	}
 	
 	
@@ -112,23 +123,25 @@ public class Aeroport {
 			}
 		}
 		if(c != null) {
-			ArrayList<Avion> f = c.getFlotte();
-			Avion a = f.get((int)(Math.random() * f.size()));
-			
-			if(this.fileAttentePilote.get(c).size() >= a.getNbPilotesMin()) {
-				for (int i  = 0 ; i < a.getNbPilotesMin(); i++) {
-					a.ajouterPilote(this.fileAttentePilote.get(c).remove());
+			Avion a;
+			try {
+				a = c.utiliserUnAvion();
+				if(this.fileAttentePilote.get(c).size() >= a.getNbPilotesMin()) {
+					for (int i  = 0 ; i < a.getNbPilotesMin(); i++) {
+						a.ajouterPilote(this.fileAttentePilote.get(c).remove());
+					}
+					
+					Aeroport aer = Program.autresAeroports.get((int)(Math.random() * Program.autresAeroports.size()));				
+					Vol v = new Vol(a,aer,this);
+					this.volsEnPreparation.add(v);
+					return true;
 				}
-				
-				Aeroport aer = Program.autresAeroports.get((int)(Math.random() * Program.autresAeroports.size()));				
-				Vol v = new Vol(a,aer,this);
-				this.volsEnPreparation.add(v);
-				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
 			}
 		}
-			
-		return false;
-		
+		return false;		
 	}
 	
 	/**
@@ -169,10 +182,9 @@ public class Aeroport {
 	
 	/**
 	 * Fait attï¿½rir les avion en premiï¿½re place de la file d'attente
-	 * ESPACEMENT NON Gï¿½Rï¿½
 	 */
 	public void Atterissage() {
-		for(Piste p: pistesAtterissage) {
+		for(Piste p: pistesAtterrissage) {
 			if(p.getCooldown() >= p.getEspacement()) {
 				if(p.getFileDAttente().size()>0) {
 					Vol v = p.getFileDAttente().remove(0);
@@ -196,8 +208,8 @@ public class Aeroport {
 		}
 	}
 	/**
-	 * Fait dï¿½coler les avion en premiï¿½re place de la file d'attente
-	 * ESPACEMENT NON Gï¿½Rï¿½
+	 * Fait decoler les avion en premiere place de la file d'attente
+	 * Rend l'avion à nouveau utilisable
 	 */
 	public void Decollage() {
 		for(Piste p: pistesDecollage) {
@@ -205,6 +217,8 @@ public class Aeroport {
 				if(p.getFileDAttente().size()>0) {
 					Vol v = p.getFileDAttente().remove(0);
 					System.out.println("Le vol " + v + " vient de dï¿½coller");
+					//Recupere la compagnie via l'employeur du pilote (Tous les pilotes étant de la même compagnie)
+					v.getAvion().getPilotes().get(0).getEmployeur().setUtilisable(v.getAvion());
 				}
 			}
 			else {
@@ -212,6 +226,8 @@ public class Aeroport {
 				System.out.println("Piste en cours de préparation\n=======================");
 			}
 		}
+		
+		
 	}
 	
 	
@@ -271,13 +287,13 @@ public class Aeroport {
 		enMarche = 0;
 		piste = null;
 		
-		for (int i = 0; i < pistesAtterissage.size(); i++) {
-	        if (pistesAtterissage.get(i).getEnMarche()) {
+		for (int i = 0; i < pistesAtterrissage.size(); i++) {
+	        if (pistesAtterrissage.get(i).getEnMarche()) {
 	        	enMarche++;
 	        }
 	        
-	        if (pistesAtterissage.get(i).getId() == id) {
-	        	piste = pistesAtterissage.get(i);
+	        if (pistesAtterrissage.get(i).getId() == id) {
+	        	piste = pistesAtterrissage.get(i);
 	        }
 	    }
 		
@@ -289,12 +305,12 @@ public class Aeroport {
 			
 			piste.setFileDAttente(new ArrayList<Vol>());
 			
-			for (int i = 0; i < pistesAtterissage.size(); i++) {
-				if (pistesAtterissage.get(i).getEnMarche()) {
-					fileAttente.addAll(pistesAtterissage.get(i).getFileDAttente());
+			for (int i = 0; i < pistesAtterrissage.size(); i++) {
+				if (pistesAtterrissage.get(i).getEnMarche()) {
+					fileAttente.addAll(pistesAtterrissage.get(i).getFileDAttente());
 					fileAttente.addAll(parts.get(k));
 
-					pistesAtterissage.get(i).setFileDAttente(fileAttente);
+					pistesAtterrissage.get(i).setFileDAttente(fileAttente);
 					
 					k++;
 				}
@@ -329,10 +345,10 @@ public class Aeroport {
 	
 		piste = null;
 		
-		for (int i = 0; i < pistesAtterissage.size(); i++) {
+		for (int i = 0; i < pistesAtterrissage.size(); i++) {
 	       
-	        if (pistesAtterissage.get(i).getId() == id) {
-	        	piste = pistesAtterissage.get(i);
+	        if (pistesAtterrissage.get(i).getId() == id) {
+	        	piste = pistesAtterrissage.get(i);
 	        }
 	    }
 		
