@@ -2,11 +2,13 @@ package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.avion.AvionLigne;
 import com.gestion.aeroport.passager.Passager;
+import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
 
 
@@ -34,10 +36,8 @@ public class Aeroport {
 	}
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
-		
-		//
 		this.passagersDansAeroport = new ArrayList<Passager>();
-		this.ArriveePassagerDansAeroport();
+		
 		
 		this.radar = new ArrayList<Vol>(); 
 		this.volsEnPreparation = new ArrayList<Vol>();		
@@ -47,9 +47,22 @@ public class Aeroport {
 		this.fileAttentePilote = new HashMap<Compagnie, Queue<Pilote>>();
 		this.fileAttentePassager = new HashMap<Program.Destination, Queue<Passager>>();
 		this.avionsAuSol = new HashMap<Compagnie, ArrayList<Avion>>();
+		
+		for(Program.Destination d : Program.Destination.values()) {
+			this.fileAttentePassager.put(d, new LinkedList<Passager>());
+		}
+		
+		
+		this.ArriveePassagerDansAeroport();
 	}
 	
 	
+	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassager() {
+		return fileAttentePassager;
+	}
+	public void setFileAttentePassager(HashMap<Program.Destination, Queue<Passager>> fileAttentePassager) {
+		this.fileAttentePassager = fileAttentePassager;
+	}
 	public HashMap<Compagnie, ArrayList<Avion>> getAvionsAuSol() {
 		return avionsAuSol;
 	}
@@ -114,33 +127,76 @@ public class Aeroport {
 	 */
 	public boolean generateVol() {
 		
+		//Compagnie avec le plus de pilotes en attente et au moins 1 avion au sol
 		Compagnie c = null;
 		int maxPiloteAttente = 0;
 		for(Compagnie comp : Program.compagnies) {
-			if(this.fileAttentePilote.get(comp).size() > maxPiloteAttente) {
+			if(this.fileAttentePilote.get(comp).size() > maxPiloteAttente && this.avionsAuSol.get(comp).size() > 0) {
 				c = comp;
 				maxPiloteAttente = this.fileAttentePilote.get(comp).size();
 			}
 		}
 		if(c != null) {
-			Avion a;
-			try {
-				a = c.utiliserUnAvion();
-				if(this.fileAttentePilote.get(c).size() >= a.getNbPilotesMin()) {
-					for (int i  = 0 ; i < a.getNbPilotesMin(); i++) {
-						a.ajouterPilote(this.fileAttentePilote.get(c).remove());
-					}
-					
-					Aeroport aer = Program.autresAeroports.get((int)(Math.random() * Program.autresAeroports.size()));				
-					Vol v = new Vol(a,aer,this);
-					this.volsEnPreparation.add(v);
-					return true;
+			//Destination avec le plus de passager en attente 
+			Program.Destination dest = null;
+			int maxPassagerAttente  = 0;
+			for(Program.Destination d : Program.Destination.values()) {
+				if(this.fileAttentePassager.get(d).size() > maxPassagerAttente) {
+					dest = d;
+					maxPassagerAttente = this.fileAttentePassager.get(d).size();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
+			}
+		
+			if(dest != null) {
+				//Selectionne avion avec la capacite la plus proche du nombre de personnes en attente
+				ArrayList<Avion> avions = this.avionsAuSol.get(c);
+				Avion a = avions.get(0);
+				int differenceCapaciteAttente = Math.abs(a.getCapaciteMax() - maxPassagerAttente);
+				for(int i = 1; i < avions.size(); i++) {
+					if(Math.abs(avions.get(i).getCapaciteMax() - maxPassagerAttente) < differenceCapaciteAttente){
+						differenceCapaciteAttente = Math.abs(avions.get(i).getCapaciteMax() - maxPassagerAttente);
+					}
+				}	
+				
+				//Remplissage du Vol
+				try {
+					a = c.utiliserUnAvion();
+					ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
+					for(Pilote p: pilotes) {
+						a.ajouterPilote(p);
+					}
+					if(a.getClass() == AvionLigne.class) {
+						AvionLigne avion = (AvionLigne)a;
+						ArrayList<Personnel> personnels = c.utiliserDuPersonnel(avion.getNbPersonnelsMin());
+						for(Personnel p : personnels) {
+							avion.ajouterPersonnel(p);
+						}
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+				int n;
+				if(a.getCapaciteMax() - a.getCapacite() < maxPassagerAttente) {
+					n = a.getCapaciteMax() - a.getCapacite();
+				}
+				else {
+					n =  maxPassagerAttente;
+				}			
+				for(int i = 0; i < n; i++) {
+					a.ajouterPassager(new Passager(dest.toString()));
+				}
+				
+				Vol v = new Vol(a, dest.getAeroport(), this);
+				Program.DemandeDecollage(v);
+				
+				
+				
 			}
 		}
+
+		
 		return false;		
 	}
 	
@@ -151,34 +207,12 @@ public class Aeroport {
 	public int ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
 		for(int i = 0; i < random; i++) {
-			this.passagersDansAeroport.add(new Passager(Program.Destination.randomDestination().toString()));
+			Program.Destination d = Program.Destination.randomDestination();
+			this.getFileAttentePassager().get(d).add(new Passager(d.toString()));
 		}
 		return random;
 	}
-	
-	/**
-	 * Rempli les vols en attente avec des passagers dans l'aï¿½roport
-	 */
-	public void RemplissageVol() {		
-		Iterator<Vol> i = this.volsEnPreparation.iterator();
-		while (i.hasNext()) {
-			Vol v = i.next();
-			Iterator<Passager> j = this.passagersDansAeroport.iterator();
-			while (j.hasNext()) {
-				Passager p = j.next();			
-				if(p.getVoyage() == v.getArrivee().getNom()) {
-					v.getAvion().ajouterPassager(p);
-					j.remove();
-				}
-				if(v.getNbPersonneABord() == v.getAvion().getCapaciteMax()) {
-					Program.DemandeDecollage(v);
-					i.remove();
-					break;
-				}
-			}
-		}
-	}
-	
+		
 	
 	/**
 	 * Fait attï¿½rir les avion en premiï¿½re place de la file d'attente
@@ -219,6 +253,7 @@ public class Aeroport {
 					System.out.println("Le vol " + v + " vient de dï¿½coller");
 					//Recupere la compagnie via l'employeur du pilote (Tous les pilotes étant de la même compagnie)
 					v.getAvion().getPilotes().get(0).getEmployeur().setUtilisable(v.getAvion());
+					p.setCooldown(0);
 				}
 			}
 			else {

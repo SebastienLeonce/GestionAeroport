@@ -24,28 +24,33 @@ public class Program {
 	
 	
 	public static enum Destination {
-        LONDRES("Londres"),
-        NY("New-York"), 
-        SINGAPOUR("Singapour"),
-        SIDNEY("Sidney"),
-        MOSCOU("Moscou"),
-        BRATISLAVA("Bratislava");
+        LONDRES(new Aeroport("Londres")),
+        NY(new Aeroport("New-York")), 
+        SINGAPOUR(new Aeroport("Singapour")),
+        SIDNEY(new Aeroport("Sidney")),
+        MOSCOU(new Aeroport("Moscou")),
+        BRATISLAVA(new Aeroport("Bratislava"));
         
-		private String destName;
-        private Destination(String d) {
-            this.destName = d;
+		private Aeroport aeroport;
+        private Destination(Aeroport d) {
+            this.aeroport = d;
         }
        
+        
         private static final java.util.List<Destination> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 		private static final int SIZE = VALUES.size();
 		private static final Random RANDOM = new Random();
 	
+		
+		public Aeroport getAeroport() {
+			return this.aeroport;
+		}
 		public static Destination randomDestination()  {
 		    return VALUES.get(RANDOM.nextInt(SIZE));
 		}        
         @Override
         public String toString(){
-            return destName;
+            return this.aeroport.getNom();
         }
     }
 	
@@ -85,6 +90,11 @@ public class Program {
 				orly.getFileAttentePilote().get(c).add(new Pilote(c));
 			}
 			
+			
+			
+			
+			
+			
 			//De 0 à 4 avions par compagnie en attente
 			random = 0 + (int)(Math.random() * ((4-0) + 0 ));
 			for(int j = 0; j < random; j++) {
@@ -116,13 +126,14 @@ public class Program {
 			orly.Decollage();
 			
 			//Arrivï¿½e de Passager et remplissage des vols
-			orly.generateVol();
+			
 			
 			orly.ArriveePassagerDansAeroport();
 			System.out.println(orly.getPassagersDansAeroport().size());
-			orly.RemplissageVol();
+			orly.generateVol();
 			System.out.println(orly.getPassagersDansAeroport().size());
-			System.out.println(orly.getVolsEnPreparation());
+			
+			
 			
 			
 			//file d'attente pour chaque destination
