@@ -15,8 +15,8 @@ public class AvionLigne extends Avion {
 
 	private List<Personnel>   personnels = new ArrayList<Personnel>();
 	
-	public AvionLigne(String modele, int capacite, float poidsBagagesMax, float volCarburant,float consommationCarburant, int nbPilotes, int nbPersonnels, Compagnie compagnie) {
-		super(modele, capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes);
+	public AvionLigne(String modele, int capacite, float poidsBagagesMax, float volCarburant,float consommationCarburant, int nbPilotes, int espacement, int nbPersonnels, Compagnie compagnie) {
+		super(modele, capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement);
 		
 		this.nbPersonnelsMin = nbPersonnels;
 		this.compagnie = compagnie;

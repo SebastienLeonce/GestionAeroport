@@ -10,8 +10,8 @@ public class AvionDiplomatique extends Avion {
 	
 	private String etat;
 	
-	public AvionDiplomatique(String modele, int capacite, float poidsBagagesMax, float volCarburant, float consommationCarburant,int nbPilotes, String etat) {
-		super(modele, capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes);
+	public AvionDiplomatique(String modele, int capacite, float poidsBagagesMax, float volCarburant, float consommationCarburant,int nbPilotes,int espacement, String etat) {
+		super(modele, capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement);
 		
 		this.etat = etat;
 		

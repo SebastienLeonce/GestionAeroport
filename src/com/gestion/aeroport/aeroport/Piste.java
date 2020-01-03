@@ -6,31 +6,19 @@ public class Piste {
 
     private ArrayList<Vol> fileDAttente;
     private int espacement;
-    private int cooldown;
     private boolean enMarche;
     private int id;
-    private  static  int compteur =  0 ;
+    private  static int compteur =  0 ;
     
 
-    Piste(final int espacement){
+    public Piste(){
         this.fileDAttente = new ArrayList<Vol>();
-        this.espacement = espacement;
-        this.cooldown = espacement;
         this.enMarche = true;
         this.id = compteur;
-        
+        this.espacement = 0;
         compteur++;
     }
 
-   
-    
-
-    public int getCooldown() {
-		return cooldown;
-	}
-	public void setCooldown(int cooldown) {
-		this.cooldown = cooldown;
-	}
 
 	public ArrayList<Vol> getFileDAttente(){
         return this.fileDAttente;
@@ -43,6 +31,9 @@ public class Piste {
 
 	public int getEspacement(){
         return this.espacement;
+    }
+    public void setEspacement(int espacement) {
+    	this.espacement = espacement;
     }
     
 	public boolean getEnMarche() {
@@ -63,7 +54,7 @@ public class Piste {
 	public String toString() {
 		return "\n" + 
 					"\tid=" + id + "\n" + 
-					"\tfileDAttente = " + fileDAttente + "\n" + 
+					"\tNombre d'avion en file d'attente = " + fileDAttente.size() + "\n" + 
 					"\tespacement   = " + espacement   + "\n" + 
 					"\tenMarche     = " + enMarche     + "\n";
 	}

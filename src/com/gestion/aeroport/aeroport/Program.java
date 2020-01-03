@@ -60,11 +60,11 @@ public class Program {
 				
 		orly = new Aeroport("Orly",
 				new ArrayList<Piste>(Arrays.asList(  //Atterrisage
-					new Piste(1),
-					new Piste(1))), 
+					new Piste(),
+					new Piste())), 
 				new ArrayList<Piste>(Arrays.asList(  //Decollage
-						new Piste(2),
-						new Piste(3))));
+						new Piste(),
+						new Piste())));
 		autresAeroports = new ArrayList<Aeroport>(Arrays.asList(
 				new Aeroport(Destination.LONDRES.toString()),
 				new Aeroport(Destination.NY.toString()),
@@ -147,8 +147,12 @@ public class Program {
 			
 			
 			//Arrivï¿½e de Passager et remplissage des vols	
+			System.out.println("==========Arrivée de Passager dans l'aeroport===========");
 			orly.ArriveePassagerDansAeroport();
-			orly.generateVol();
+			System.out.println("==========Création de vol==========");
+			if(!orly.generateVol()) {
+				System.out.println("Aucun vol n'a été créer par manque de personnel/pilote/avion");
+			}
 			
 			
 			
@@ -208,7 +212,11 @@ public class Program {
 				else {
 					System.out.println("Ce n'est pas une action valide");
 				}
-			}			
+			}
+			System.out.println("==========Consommation de Carburant==========");
+			orly.consommationCarburant();
+			
+			
 		}
 	}
 	
@@ -275,7 +283,7 @@ public class Program {
 			for(Pilote p: pilotes) {
 				a.ajouterPilote(p);
 			}
-			if(a.getClass() == AvionLigne.class) {
+			if(a instanceof AvionLigne) {
 				AvionLigne avion = (AvionLigne)a;
 				ArrayList<Personnel> personnels = c.utiliserDuPersonnel(avion.getNbPersonnelsMin());
 				for(Personnel p : personnels) {
@@ -284,7 +292,7 @@ public class Program {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			a = null;
 		}
 		

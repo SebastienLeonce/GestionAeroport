@@ -22,12 +22,9 @@ public abstract class Avion {
 	public static final int PILOTE_MAX = 3;
 	public static final int PERSONNEL_MIN = 5;
 	public static final int PERSONNEL_MAX = 15;
+	public static final int ESPACEMENT_MIN = 1;
+	public static final int ESPACEMENT_MAX = 2;
 	
-	/**
-	 * True : utilisable dans le Programme
-	 * False : Actuellement utilisé dans le Programme
-	 */
-	private boolean dispo;
 	
 	private String modele;
 	private int capaciteMax;
@@ -38,18 +35,20 @@ public abstract class Avion {
 	private float consomamtionCarburant;
 	private int nbPilotesMin;
 	private int nbPilotes = 0;
+	private int espacement;
+	
 	
 	private ArrayList<Passager> passagers = new ArrayList<Passager>();
 	private ArrayList<Pilote>   pilotes = new ArrayList<Pilote>();
 	
-	public Avion(String modele, int capacite, float poidsBagagesMax, float volCarburant, float consommationCarburant, int nbPilotes) {
+	public Avion(String modele, int capacite, float poidsBagagesMax, float volCarburant, float consommationCarburant, int nbPilotes, int espacement) {
 		this.modele = modele;
 		this.capaciteMax = capacite;
 		this.poidsBagagesMax = poidsBagagesMax;
 		this.volCarburant = volCarburant;
 		this.consomamtionCarburant = consommationCarburant;
 		this.nbPilotesMin = nbPilotes;
-		this.dispo = true;
+		this.espacement = espacement;
 	}
 		
 	public boolean ajouterPassager (Passager passager) {
@@ -97,16 +96,17 @@ public abstract class Avion {
 				
 				int capacite = CAPACITE_MIN + (int)(Math.random() * ((CAPACITE_MAX-CAPACITE_MIN) + 1 ));
 				int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX-PILOTE_MIN) + 1 ));
+				int espacement = ESPACEMENT_MIN + (int)(Math.random() * ((ESPACEMENT_MAX - ESPACEMENT_MIN) + 1 ));
 				float poidsBagagesMax = capacite*40;
 				float volCarburant = CARBURANT_MIN + (int)(Math.random() * ((CARBURANT_MAX-CARBURANT_MIN) + 1 ));
 				float consommationCarburant= CONSOMMATION_MIN + (int)(Math.random() * ((CONSOMMATION_MAX-CONSOMMATION_MIN) + 1 ));
 				
 				
 				if (c.getNom().equals("\"Private flight\"")) {
-					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, new Passager("null")));
+					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, new Passager("null")));
 				} else {
 					int nbPersonnels = PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 ));
-					avions.add(new AvionLigne(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, nbPersonnels, c));
+					avions.add(new AvionLigne(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, nbPersonnels, c));
 				}
 			}
 			else {
@@ -115,14 +115,10 @@ public abstract class Avion {
 		}
 		return avions;
 	}
-	
-	
-	public boolean isDispo() {
-		return dispo;
-	}
 
-	public void setDispo(boolean dispo) {
-		this.dispo = dispo;
+	
+	public int getEspacement() {
+		return espacement;
 	}
 
 	public float getConsomamtionCarburant() {
