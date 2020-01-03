@@ -28,9 +28,6 @@ public class Aeroport {
 	private ArrayList<Vol> radar;
 	
 	
-	private ArrayList<Vol> volsEnPreparation;
-	private ArrayList<Passager> passagersDansAeroport;
-	
 	private HashMap<Compagnie, ArrayList<Avion>> avionsAuSol;
 	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
 	private HashMap<Compagnie, Queue<Personnel>> fileAttentePersonnel;
@@ -44,11 +41,9 @@ public class Aeroport {
 	}
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
-		this.passagersDansAeroport = new ArrayList<Passager>();
 		
 		
 		this.radar = new ArrayList<Vol>(); 
-		this.volsEnPreparation = new ArrayList<Vol>();		
 		
 		this.pistesDecollage = pistesDecollage;
 		this.pistesAtterrissage = pistesAtterrissage;
@@ -81,16 +76,6 @@ public class Aeroport {
 	public void setAvionsAuSol(HashMap<Compagnie, ArrayList<Avion>> avionsAuSol) {
 		this.avionsAuSol = avionsAuSol;
 	}
-	public ArrayList<Vol> getVolsEnPreparation() {
-		return volsEnPreparation;
-	}
-	public void setVolsEnPreparation(ArrayList<Vol> volsEnPreparation) {
-		this.volsEnPreparation = volsEnPreparation;
-	}
-	public void setPassagersDansAeroport(ArrayList<Passager> passagersDansAeroport) {
-		this.passagersDansAeroport = passagersDansAeroport;
-	}
-	
 	public HashMap<Compagnie, Queue<Pilote>> getFileAttentePilote() {
 		return fileAttentePilote;
 	}
@@ -120,9 +105,6 @@ public class Aeroport {
 	}
 	public void setRadar(ArrayList<Vol> radar) {
 		this.radar = radar;
-	}
-	public ArrayList<Passager> getPassagersDansAeroport() {
-		return passagersDansAeroport;
 	}
 	@Override
 	public String toString() {
@@ -269,9 +251,19 @@ public class Aeroport {
 			if(p.getCooldown() >= p.getEspacement()) {
 				if(p.getFileDAttente().size()>0) {
 					Vol v = p.getFileDAttente().remove(0);
-					System.out.println("Le vol " + v + " vient de dï¿½coller");
-					//Recupere la compagnie via l'employeur du pilote (Tous les pilotes étant de la même compagnie)
-					v.getCompagnie().setUtilisable(v.getAvion());
+					System.out.println("Le vol " + v + " vient de decoller");
+					Avion a = v.getAvion();
+					this.avionsAuSol.get(v.getCompagnie()).remove(a);
+					v.getCompagnie().setUtilisable(a);
+					for(Pilote pilote : a.getPilotes()) {
+						v.getCompagnie().setUtilisable(pilote);
+					}
+					if(a instanceof AvionLigne) {
+						AvionLigne al = (AvionLigne)a;
+						for(Personnel personnel : al.getPersonnels()) {
+							v.getCompagnie().setUtilisable(personnel);
+						}
+					}
 					p.setCooldown(0);
 				}
 			}
@@ -291,6 +283,9 @@ public class Aeroport {
 			a.setVolCarburant(a.getVolCarburant() - a.getConsomamtionCarburant());
 		}
 	}
+	/**
+	 * Incrémente le cooldown des pilotes jusqu'a ce que leur temps de repos soit terminé
+	 */
 	public void repos() {
 		Iterator<Pilote> i = this.reposPilote.iterator();
 		while(i.hasNext()) {

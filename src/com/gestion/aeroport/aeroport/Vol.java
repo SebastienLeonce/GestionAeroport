@@ -73,6 +73,7 @@ public class Vol {
 	public String toString() {
 		return "Vol numéro : " + numeroDeVol + "\n" +
 				"\t" + avion + "\n" +
+				"\tAffreté par la compagnie " + compagnie.getNom() + "\n" +
 				"\tEn provenance de : " + aeroportDepart.getNom() + "\n" +
 				"\tA destination de : " + aeroportArrivee.getNom() + "\n" +
 				"\tAvec " + this.getNbPersonneABord() + " occupants à bord \n";
