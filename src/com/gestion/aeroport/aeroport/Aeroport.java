@@ -2,6 +2,7 @@ package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -34,6 +35,8 @@ public class Aeroport {
 	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
 	private HashMap<Compagnie, Queue<Personnel>> fileAttentePersonnel;
 	private HashMap<Program.Destination, Queue<Passager>> fileAttentePassager;
+	private ArrayList<Pilote> reposPilote;
+	
 	
 	
 	public Aeroport(String nom) {
@@ -53,6 +56,8 @@ public class Aeroport {
 		this.fileAttentePersonnel = new HashMap<Compagnie, Queue<Personnel>>();
 		this.fileAttentePassager = new HashMap<Program.Destination, Queue<Passager>>();
 		this.avionsAuSol = new HashMap<Compagnie, ArrayList<Avion>>();
+		this.reposPilote = new ArrayList<Pilote>();
+		
 		
 		for(Program.Destination d : Program.Destination.values()) {
 			this.fileAttentePassager.put(d, new LinkedList<Passager>());
@@ -231,7 +236,7 @@ public class Aeroport {
 	/**
 	 * Fait atterir les avion en premiere place de la file d'attente
 	 */
-	public void Atterissage() {
+	public void Atterrissage() {
 		for(Piste p: pistesAtterrissage) {
 			if(p.getCooldown() >= p.getEspacement()) {
 				if(p.getFileDAttente().size()>0) {
@@ -240,11 +245,10 @@ public class Aeroport {
 					System.out.println("Le vol " + v + " vient d'atterir");
 					
 					//Seul les pilotes restent dans l'aeroport
-					for(Passager passager : v.getAvion().getPassagers()) {
-						if(passager.getClass() == Pilote.class) {
+					for(Passager passager : v.getOccupants()) {
+						if(passager instanceof Pilote) {
 							Pilote pilote = (Pilote)passager;
-							this.passagersDansAeroport.add(pilote);
-							this.fileAttentePilote.get(pilote.getEmployeur()).add(pilote);
+							this.reposPilote.add(pilote);
 						}
 					}
 					p.setCooldown(0);
@@ -287,6 +291,21 @@ public class Aeroport {
 			a.setVolCarburant(a.getVolCarburant() - a.getConsomamtionCarburant());
 		}
 	}
+	public void repos() {
+		Iterator<Pilote> i = this.reposPilote.iterator();
+		while(i.hasNext()) {
+			Pilote p = i.next();
+			if(p.getCooldown() >= p.getTempsPause()) {
+				this.fileAttentePilote.get(p.getEmployeur()).add(p);
+				i.remove();
+				p.setCooldown(0);
+			}
+			else {
+				p.setCooldown(p.getCooldown() + 1);
+			}
+		}
+	}
+	
 	
 	
 	

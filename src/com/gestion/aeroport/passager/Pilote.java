@@ -8,11 +8,17 @@ import com.gestion.aeroport.aeroport.Compagnie;
 
 public class Pilote extends Passager {
 	
+	public static final int PASSAGERMAX_MIN = 200;
+	public static final int PASSAGERMAX_MAX = 500;
+	public static final int TEMPSPOSE_MIN = 1;
+	public static final int TEMPSPOSE_MAX = 5;
+	
 	
 	private Compagnie employeur;
 	private int passagersMax;
 	private int tempsPause;
 	private boolean enVol;
+	private int cooldown;
 	
 	/**
 	 * 
@@ -31,6 +37,7 @@ public class Pilote extends Passager {
 		this.employeur = employeur;
 		this.passagersMax = passagersMax;
 		this.tempsPause = tempsPause;
+		this.cooldown  = 0;
 		this.enVol = true;
 	}
 	
@@ -41,12 +48,21 @@ public class Pilote extends Passager {
 	public Pilote (Compagnie employeur) {
 		super(null);
 		this.employeur = employeur;
-		this.passagersMax = new Random().nextInt(500 - 200 + 1)  + 200;
-		this.tempsPause = new Random().nextInt(20 - 5 + 1)  + 20;
+		this.passagersMax = new Random().nextInt(PASSAGERMAX_MAX - PASSAGERMAX_MIN + 1)  + PASSAGERMAX_MIN;
+		this.tempsPause = new Random().nextInt(TEMPSPOSE_MAX - TEMPSPOSE_MIN + 1)  + TEMPSPOSE_MIN;
 		this.enVol = true;
 	}
 	
 	
+	
+	public int getCooldown() {
+		return cooldown;
+	}
+
+	public void setCooldown(int cooldown) {
+		this.cooldown = cooldown;
+	}
+
 	/**
 	 * 
 	 * @return

@@ -130,14 +130,16 @@ public class Program {
 		
 		
 		while(programRunning) {
+			//Repos des Pilotes
+			orly.repos();
 			
-			//Att�rissage
+			//Atterrissage
 			System.out.println("==========Demande d'Atterissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Atterissage==========");
-			orly.Atterissage();
+			orly.Atterrissage();
 			
-			//D�collage);
+			//Decollage);
 			System.out.println("==========Decollage==========");
 			orly.Decollage();
 			
@@ -146,9 +148,7 @@ public class Program {
 			
 			//Arriv�e de Passager et remplissage des vols	
 			orly.ArriveePassagerDansAeroport();
-			System.out.println(orly.getPassagersDansAeroport().size());
 			orly.generateVol();
-			System.out.println(orly.getPassagersDansAeroport().size());
 			
 			
 			
