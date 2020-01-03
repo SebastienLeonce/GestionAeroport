@@ -16,6 +16,9 @@ public class Aeroport {
 
 	private static final int  MIN_ARRIVEE_PASSAGER = 100;
 	private static final int  MAX_ARRIVEE_PASSAGER = 200;
+	private static final int  MIN_ARRIVEE_PERSONNEL = 10;
+	private static final int  MAX_ARRIVEE_PERSONNEL = 30;
+	
 	
 	private String nom;
 	
@@ -29,7 +32,9 @@ public class Aeroport {
 	
 	private HashMap<Compagnie, ArrayList<Avion>> avionsAuSol;
 	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
+	private HashMap<Compagnie, Queue<Personnel>> fileAttentePersonnel;
 	private HashMap<Program.Destination, Queue<Passager>> fileAttentePassager;
+	
 	
 	public Aeroport(String nom) {
 		this.nom = nom;
@@ -45,6 +50,7 @@ public class Aeroport {
 		this.pistesDecollage = pistesDecollage;
 		this.pistesAtterrissage = pistesAtterrissage;
 		this.fileAttentePilote = new HashMap<Compagnie, Queue<Pilote>>();
+		this.fileAttentePersonnel = new HashMap<Compagnie, Queue<Personnel>>();
 		this.fileAttentePassager = new HashMap<Program.Destination, Queue<Passager>>();
 		this.avionsAuSol = new HashMap<Compagnie, ArrayList<Avion>>();
 		
@@ -52,11 +58,12 @@ public class Aeroport {
 			this.fileAttentePassager.put(d, new LinkedList<Passager>());
 		}
 		
-		
-		this.ArriveePassagerDansAeroport();
 	}
 	
 	
+	public HashMap<Compagnie, Queue<Personnel>> getFileAttentePersonnel() {
+		return fileAttentePersonnel;
+	}
 	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassager() {
 		return fileAttentePassager;
 	}
@@ -155,15 +162,14 @@ public class Aeroport {
 				for(int i = 1; i < avions.size(); i++) {
 					if(Math.abs(avions.get(i).getCapaciteMax() - maxPassagerAttente) < differenceCapaciteAttente){
 						differenceCapaciteAttente = Math.abs(avions.get(i).getCapaciteMax() - maxPassagerAttente);
+						a = avions.get(i);
 					}
 				}	
 				
 				//Remplissage du Vol
 				try {
-					a = c.utiliserUnAvion();
-					ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
-					for(Pilote p: pilotes) {
-						a.ajouterPilote(p);
+					for(int i = 0; i < a.getNbPilotesMin(); i++) {
+						a.ajouterPilote(this.fileAttentePilote.get(c).remove());
 					}
 					if(a.getClass() == AvionLigne.class) {
 						AvionLigne avion = (AvionLigne)a;
@@ -173,7 +179,6 @@ public class Aeroport {
 						}
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return false;
 				}
@@ -188,15 +193,13 @@ public class Aeroport {
 					a.ajouterPassager(new Passager(dest.toString()));
 				}
 				
-				Vol v = new Vol(a, dest.getAeroport(), this);
+				Vol v = new Vol(a, dest.getAeroport(), this, c);
 				Program.DemandeDecollage(v);
 				
 				
 				
 			}
 		}
-
-		
 		return false;		
 	}
 	
@@ -204,25 +207,37 @@ public class Aeroport {
 	 * Crï¿½er de nouveaux passagers dans l'aï¿½roport avec une destination random
 	 * @return nombre de passager crï¿½ï¿½
 	 */
-	public int ArriveePassagerDansAeroport() {
+	public void ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
 		for(int i = 0; i < random; i++) {
 			Program.Destination d = Program.Destination.randomDestination();
 			this.getFileAttentePassager().get(d).add(new Passager(d.toString()));
 		}
-		return random;
+		for(Compagnie c : Program.compagnies) {
+			random = MIN_ARRIVEE_PERSONNEL + (int)(Math.random() * ((MAX_ARRIVEE_PERSONNEL - MIN_ARRIVEE_PERSONNEL) + MIN_ARRIVEE_PERSONNEL ));
+			for(int i = 0; i < random; i++) {
+				try {
+					this.getFileAttentePersonnel().get(c).add(c.utiliserUnPersonnel());
+				} catch (Exception e) {
+					//Plus de personnel disponible
+					//e.printStackTrace();
+					break;
+				}
+			}
+		}
 	}
 		
 	
 	/**
-	 * Fait attï¿½rir les avion en premiï¿½re place de la file d'attente
+	 * Fait atterir les avion en premiere place de la file d'attente
 	 */
 	public void Atterissage() {
 		for(Piste p: pistesAtterrissage) {
 			if(p.getCooldown() >= p.getEspacement()) {
 				if(p.getFileDAttente().size()>0) {
 					Vol v = p.getFileDAttente().remove(0);
-					System.out.println("Le vol " + v + " vient d'attï¿½rir");
+					this.radar.remove(v);
+					System.out.println("Le vol " + v + " vient d'atterir");
 					
 					//Seul les pilotes restent dans l'aeroport
 					for(Passager passager : v.getAvion().getPassagers()) {
@@ -237,7 +252,7 @@ public class Aeroport {
 			}
 			else {
 				p.setCooldown(p.getCooldown()+1);
-				System.out.println("Piste en cours de préparation\\n=======================");
+				System.out.println("Piste en cours de préparation\n=======================");
 			}
 		}
 	}
@@ -252,7 +267,7 @@ public class Aeroport {
 					Vol v = p.getFileDAttente().remove(0);
 					System.out.println("Le vol " + v + " vient de dï¿½coller");
 					//Recupere la compagnie via l'employeur du pilote (Tous les pilotes étant de la même compagnie)
-					v.getAvion().getPilotes().get(0).getEmployeur().setUtilisable(v.getAvion());
+					v.getCompagnie().setUtilisable(v.getAvion());
 					p.setCooldown(0);
 				}
 			}
@@ -264,6 +279,15 @@ public class Aeroport {
 		
 		
 	}
+	
+	
+	public void consommationCarburant() {
+		for(Vol v : this.radar) {
+			Avion a = v.getAvion();
+			a.setVolCarburant(a.getVolCarburant() - a.getConsomamtionCarburant());
+		}
+	}
+	
 	
 	
 	/**
@@ -280,6 +304,8 @@ public class Aeroport {
 		p.getFileDAttente().add(position, v);
 		return position;
 	}
+	
+	
 	public boolean eteindrePiste(int id) {
 		int enMarche = 0;
 		Piste piste = null;

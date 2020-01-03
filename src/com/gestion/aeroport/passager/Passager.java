@@ -168,11 +168,11 @@ public class Passager {
 		return 	this.getClass().getSimpleName() + " : \n" +
 				"\tprenom_nom      = " + prenom + "_" + nom + "\n" +
 				"\tanniversaire    = " + anniversaire.get(Calendar.YEAR) + "/" + anniversaire.get(Calendar.MONTH) + "/" +  anniversaire.get(Calendar.DAY_OF_MONTH) + "\n" +
-				"\tnationalite     = " + nationalite + "\n" +
+				"\tnationalite     = " + nationalite + "\n" ;/*+
 				"\tnumeroPasseport = " + numeroPasseport +  "\n" +
 				"\tvoyage          = " + voyage + "\n" +
 				"\thistorique      = " + historique + "\n" +
 				"\tnumeroVol       = " + numeroVol + "\n" +
-				"\tpriorite        = " + priorite + "\n\n";
+				"\tpriorite        = " + priorite + "\n\n";*/
 	}
 }

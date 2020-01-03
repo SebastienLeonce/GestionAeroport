@@ -78,22 +78,38 @@ public class Program {
 		System.out.println("Bienvenue dans le systeme de gestion de l'aeroport d'Orly.");
 		System.out.println("Initialisation du systeme, veuillez patientez...");
 		
+		
+		//Initialisation des Compagnies et des avions/personnels/pilotes dans l'aeroport
 		compagnies = Compagnie.generate(NB_COMPAGNIES);
 		for(int i = 0; i < NB_COMPAGNIES ; i++) {
 			Compagnie c = compagnies.get(i);
 			orly.getFileAttentePilote().put(c,new LinkedList<Pilote>());
+			orly.getFileAttentePersonnel().put(c,new LinkedList<Personnel>());
 			orly.getAvionsAuSol().put(c,new ArrayList<Avion>());
 			
-			//De 1 à 8 pilotes en attentes
-			int random = 1 + (int)(Math.random() * ((8-1) + 1 ));
-			for(int j = 0; j < random; j++) {
-				orly.getFileAttentePilote().get(c).add(new Pilote(c));
+			//De 1 à 10 pilotes en attentes
+			int random = 1 + (int)(Math.random() * ((10-1) + 1 ));
+			ArrayList<Pilote> pilotes;
+			try {
+				pilotes = c.utiliserDesPilotes(random);
+				for(Pilote p : pilotes) {
+					orly.getFileAttentePilote().get(c).add(p);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
 			
-			
-			
-			
-			
+			//De 5 à 30 personnel en attentes
+			random = 5 + (int)(Math.random() * ((30-5) + 1 ));
+			ArrayList<Personnel> personnels;
+			try {
+				personnels = c.utiliserDuPersonnel(random);
+				for(Personnel p : personnels) {
+					orly.getFileAttentePersonnel().get(c).add(p);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			
 			//De 0 à 4 avions par compagnie en attente
 			random = 0 + (int)(Math.random() * ((4-0) + 0 ));
@@ -125,9 +141,10 @@ public class Program {
 			System.out.println("==========Decollage==========");
 			orly.Decollage();
 			
-			//Arrivï¿½e de Passager et remplissage des vols
 			
 			
+			
+			//Arrivï¿½e de Passager et remplissage des vols	
 			orly.ArriveePassagerDansAeroport();
 			System.out.println(orly.getPassagersDansAeroport().size());
 			orly.generateVol();
@@ -249,88 +266,85 @@ public class Program {
 	
 	
 	public static void DemandeAtterissage() {
-		//Entre 1 et 2 nouveaux avions souhaitant atterir
-		int random = 1 + (int)(Math.random() * ((2-1) + 1 ));
-		for(int i = 1; i <= random;i++) {
-			Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
+		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
+		
+		Avion a = null;
+		try {
+			a = c.utiliserUnAvion();
+			ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
+			for(Pilote p: pilotes) {
+				a.ajouterPilote(p);
+			}
+			if(a.getClass() == AvionLigne.class) {
+				AvionLigne avion = (AvionLigne)a;
+				ArrayList<Personnel> personnels = c.utiliserDuPersonnel(avion.getNbPersonnelsMin());
+				for(Personnel p : personnels) {
+					avion.ajouterPersonnel(p);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			a = null;
+		}
+		
+		if(a != null) {
 			
-			Avion a = null;
-			try {
-				a = c.utiliserUnAvion();
-				ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
-				for(Pilote p: pilotes) {
-					a.ajouterPilote(p);
-				}
-				if(a.getClass() == AvionLigne.class) {
-					AvionLigne avion = (AvionLigne)a;
-					ArrayList<Personnel> personnels = c.utiliserDuPersonnel(avion.getNbPersonnelsMin());
-					for(Personnel p : personnels) {
-						avion.ajouterPersonnel(p);
-					}
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				break;
+			for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
+				a.ajouterPassager(new Passager("Orly"));
 			}
 			
-			if(a != null) {
-				
-				for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
-					a.ajouterPassager(new Passager("Orly"));
-				}
-				
-				//Set Carburant low 
-				a.setVolCarburant(a.getVolCarburant() - (Avion.CARBURANT_MIN-1));				
-				Aeroport aer = autresAeroports.get((int)(Math.random() * autresAeroports.size()));				
-				Vol v = new Vol(a,orly,aer);
-				orly.getRadar().add(v);
-				
-				System.out.println("Le " + v + " a demande l'autorisation d'atterir.");
-								
-				
-				//Choix Piste
-				int piste = -1;
-				boolean pisteValidee = false;
-				while(!pisteValidee) {
-					Scanner sc = new Scanner(System.in);
-					System.out.println("Sur quelle piste d'atterrissage faut-il faire atterir cet avion ?");
-					for(int j = 0; j< orly.getPistesAtterrissage().size(); j++) {
-						System.out.print(j + " : ");
-						System.out.print(orly.getPistesAtterrissage().get(j));
-					}		
-					if(sc.hasNextInt()) {
-						piste = sc.nextInt();
-						pisteValidee = true;
-						
-						if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size()) {
-							int position = Aeroport.calculPosition(orly.getPistesAtterrissage().get(piste), v);
-							System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
-						}
-						else {
-							System.out.println("Cette piste n'existe pas");
-							pisteValidee = false;
-						}	
+			//Set Carburant low 
+			a.setVolCarburant(a.getVolCarburant() - (Avion.CARBURANT_MIN-10)); // au min l'avion a 10 de carburant
+			Aeroport aer = autresAeroports.get((int)(Math.random() * autresAeroports.size()));				
+			Vol v = new Vol(a,orly,aer, c);
+			orly.getRadar().add(v);
+			
+			System.out.println("Le " + v + " a demande l'autorisation d'atterir.");
+							
+			
+			//Choix Piste
+			int piste = -1;
+			boolean pisteValidee = false;
+			while(!pisteValidee) {
+				Scanner sc = new Scanner(System.in);
+				System.out.println("Sur quelle piste d'atterrissage faut-il faire atterir cet avion ?");
+				for(int j = 0; j< orly.getPistesAtterrissage().size(); j++) {
+					System.out.print(j + " : ");
+					System.out.print(orly.getPistesAtterrissage().get(j));
+				}		
+				if(sc.hasNextInt()) {
+					piste = sc.nextInt();
+					pisteValidee = true;
+					
+					if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size()) {
+						int position = Aeroport.calculPosition(orly.getPistesAtterrissage().get(piste), v);
+						System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
 					}
 					else {
 						System.out.println("Cette piste n'existe pas");
-					}
-					System.out.println();
+						pisteValidee = false;
+					}	
 				}
+				else {
+					System.out.println("Cette piste n'existe pas");
+				}
+				System.out.println();
 			}
 		}
+		
 	}
 	
 	public static void DemandeDecollage(Vol v) {
 		orly.getRadar().add(v);
-		System.out.println("Le " + v + " a demandï¿½ l'autorisation de dï¿½coller.");
+		System.out.println("Le " + v + " a demande l'autorisation de decoller.");
 		
 		//Choix Piste
 		int piste = -1;
 		boolean pisteValidee = false;
 		while(!pisteValidee) {
 			Scanner sc = new Scanner(System.in);
-			System.out.println("Sur quelle piste de dï¿½collage faut-il faire envoyer cet avion ?");
+			System.out.println("Sur quelle piste de decollage faut-il faire envoyer cet avion ?");
 			for(int j = 0; j< orly.getPistesDecollage().size(); j++) {
 				System.out.print(j + " : ");
 				System.out.print(orly.getPistesDecollage().get(j));

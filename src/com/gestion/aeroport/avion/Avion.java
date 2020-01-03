@@ -13,7 +13,7 @@ import com.gestion.aeroport.passager.Pilote;
 public abstract class Avion {
 	
 	public static final int CAPACITE_MIN = 100;
-	public static final int CAPACITE_MAX = 600;
+	public static final int CAPACITE_MAX = 300;
 	public static final int CARBURANT_MIN = 200;
 	public static final int CARBURANT_MAX = 600;
 	public static final int CONSOMMATION_MIN = 1;
