@@ -334,7 +334,7 @@ public class Program {
 					piste = sc.nextInt();
 					pisteValidee = true;
 					
-					if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size()) {
+					if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size() && orly.getPistesAtterrissage().get(piste).getEnMarche()) {
 						int position = Aeroport.calculPosition(orly.getPistesAtterrissage().get(piste), v);
 						System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
 					}
@@ -370,7 +370,7 @@ public class Program {
 				piste = sc.nextInt();
 				pisteValidee = true;
 				
-				if(piste >= 0 &&  piste < orly.getPistesDecollage().size()) {
+				if(piste >= 0 &&  piste < orly.getPistesDecollage().size() && orly.getPistesDecollage().get(piste).getEnMarche()) {
 					int position = Aeroport.calculPosition(orly.getPistesDecollage().get(piste), v);
 					System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
 				}
