@@ -16,6 +16,7 @@ public class Passager {
 	
 	private String voyage; 
 	private String historique = null; 
+	private float poidsBagage;
 	private int numeroVol = -1;
 	private boolean priorite = false;
 	
@@ -26,7 +27,7 @@ public class Passager {
 	 * @param anniversaire Calendar
 	 * @param nationalite String
 	 * @param numeroPasseport String
-	 * @param voyage String "depart|arriver"
+	 * @param voyage String "depart->arriver;"
 	 */
 	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage) {
 		this.prenom = prenom;
@@ -34,6 +35,8 @@ public class Passager {
 		this.anniversaire = anniversaire;
 		this.nationalite = nationalite;
 		this.numeroPasseport = numeroPasseport;
+		
+		this.poidsBagage = 10 + (int)(Math.random() * ((20-10) + 10 ));
 		
 		this.voyage = voyage;
 	}
@@ -51,10 +54,18 @@ public class Passager {
 		this.anniversaire = new Calendar.Builder(). setFields(Calendar.YEAR, Integer.parseInt(person.dateOfBirth().toString().substring(0, 4)), Calendar.MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(5, 7)) -1,Calendar.DAY_OF_MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(8, 10))).build();
 		this.nationalite = "fr";
 		this.numeroPasseport = person.passportNumber();
+		
+		this.poidsBagage = 10 + (int)(Math.random() * ((20-10) + 10 ));
 
 		this.voyage = voyage;
 	}
 	
+	
+	
+	public float getPoidsBagage() {
+		return poidsBagage;
+	}
+
 	/**
 	 * Permet d'obtenir le voyage du passager
 	 * @return Le voyage du passager
