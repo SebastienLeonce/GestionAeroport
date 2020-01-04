@@ -53,8 +53,9 @@ public abstract class Avion {
 	}
 		
 	public boolean ajouterPassager (Passager passager) {
-		if (this.capacite < this.capaciteMax) {
+		if (this.capacite < this.capaciteMax && this.poidsBagages + passager.getPoidsBagage() < this.poidsBagagesMax) {
 			this.capacite++;
+			this.poidsBagages += passager.getPoidsBagage();
 			passagers.add(passager);
 			return true;
 		}

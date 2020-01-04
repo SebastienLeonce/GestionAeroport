@@ -390,6 +390,7 @@ public class Program {
 				Scanner sc = new Scanner(System.in);
 				System.out.println("Sur quelle piste d'atterrissage faut-il faire atterir cet avion ?");
 				for(int j = 0; j< orly.getPistesAtterrissage().size(); j++) {
+					if (!orly.getPistesAtterrissage().get(j).getEnMarche()) {continue;}
 					System.out.print(j + " : ");
 					System.out.print(orly.getPistesAtterrissage().get(j));
 				}		
@@ -397,7 +398,7 @@ public class Program {
 					piste = sc.nextInt();
 					pisteValidee = true;
 					
-					if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size()) {
+					if(piste >= 0 &&  piste < orly.getPistesAtterrissage().size() && orly.getPistesAtterrissage().get(piste).getEnMarche()) {
 						int position = Aeroport.calculPosition(orly.getPistesAtterrissage().get(piste), v);
 						System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
 					}
@@ -426,6 +427,7 @@ public class Program {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Sur quelle piste de decollage faut-il faire envoyer cet avion ?");
 			for(int j = 0; j< orly.getPistesDecollage().size(); j++) {
+				if (!orly.getPistesDecollage().get(j).getEnMarche()) {continue;}
 				System.out.print(j + " : ");
 				System.out.print(orly.getPistesDecollage().get(j));
 			}		
@@ -433,7 +435,7 @@ public class Program {
 				piste = sc.nextInt();
 				pisteValidee = true;
 				
-				if(piste >= 0 &&  piste < orly.getPistesDecollage().size()) {
+				if(piste >= 0 &&  piste < orly.getPistesDecollage().size() && orly.getPistesDecollage().get(piste).getEnMarche()) {
 					int position = Aeroport.calculPosition(orly.getPistesDecollage().get(piste), v);
 					System.out.println("Le vol a ete place dans la file d'attente a la position : " + (position+1));
 				}
