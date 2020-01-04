@@ -19,8 +19,8 @@ public class Personnel extends Passager {
 	 * @param voyage
 	 * @param compagnie
 	 */
-	public Personnel(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, Compagnie compagnie) {
-		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
+	public Personnel(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive, Compagnie compagnie) {
+		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
 		this.compagnie = compagnie;
 	}
 	

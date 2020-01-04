@@ -1,23 +1,30 @@
 package com.gestion.aeroport.aeroport;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
 
-import java.util.ArrayList;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Scanner;
 
+
+/**
+ * Afin de faciliter l'utilisation des Compagnies,
+ * les vols privés sont considérés comme de la Compagnie 'Private Flight' (déjà présente dans notre fichier de compagnies)
+ * les vols diplomatiques sont considérés comme de la Compagnie 'Diplomatic Filght' (que nous avons créée)
+ */
 public class Compagnie {
 	
 	public static final int PILOTE_MIN = 50;
 	public static final int PILOTE_MAX = 150;
-	public static final int PERSONNEL_MIN = 50;
-	public static final int PERSONNEL_MAX = 150;
+	public static final int PERSONNEL_MIN = 200;
+	public static final int PERSONNEL_MAX = 300;
 	public static final int AVION_MIN = 10;
-	public static final int AVION_MAX = 50;
-	
+	public static final int AVION_MAX = 50;	
 	
 	private String nom;
 	private String nationalite;
@@ -189,37 +196,36 @@ public class Compagnie {
 	public static ArrayList<Compagnie> generate(int n) throws IOException {
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat");
 		ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
+		
+		ArrayList<String[]> data = new ArrayList<String[]>();
 		Scanner sc = new Scanner(url.openStream());
-		String[] data;
-		
 		if(sc.hasNextLine()) { sc.nextLine(); } else { throw new IOException("File Empty"); } //Première ligne inutile
-		
-		for (int i = 0 ; i < n ; i++) { 
-			
-			if(sc.hasNextLine()) {
-				
-				data = sc.nextLine().split(","); 			
-				int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
-				int nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )))/2;
-				int nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )))*3;
-
-				Compagnie comp = new Compagnie(data[1], data[6]);
-				
-				ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
-				ArrayList<Avion>  avions = Avion.generate(nbAvions, comp);
-				ArrayList<Personnel>  personnels = Personnel.generate(nbPersonnels, comp);
-				//avion diplo ?
-				comp.setPilotesDispo(pilotes);
-				comp.setFlotteDispo(avions);
-				comp.setPersonnelsDispo(personnels);
-				
-				compagnies.add(comp);
+		int i = 0;
+		while(sc.hasNextLine()) {
+			data.add(sc.nextLine().split(","));
+			if(!Program.allNationalites.contains(data.get(i)[6]) && !data.get(i)[6].equals("\"\"") && data.get(i)[6].matches("\"[A-Z][a-z].*\"")) {
+				Program.allNationalites.add(data.get(i)[6]);
 			}
-			else {
-				break;
-			}
+			i++;
 		}
 		
+		for (int j = 0 ; j < n ; j++) { 		
+			int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
+			int nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )));
+			int nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )));
+			
+			Compagnie comp = new Compagnie(data.get(j)[1], data.get(j)[6]);
+			
+			ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
+			ArrayList<Avion>  avions = Avion.generate(nbAvions, comp);
+			ArrayList<Personnel>  personnels = Personnel.generate(nbPersonnels, comp);
+			//avion diplo ?
+			comp.setPilotesDispo(pilotes);
+			comp.setFlotteDispo(avions);
+			comp.setPersonnelsDispo(personnels);
+			
+			compagnies.add(comp);
+		}
 		return compagnies;
 	}
 

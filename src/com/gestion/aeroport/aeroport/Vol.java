@@ -60,7 +60,7 @@ public class Vol {
     	ArrayList<Passager> result = new ArrayList<Passager>();
     	result.addAll(a.getPassagers());
     	result.addAll(a.getPilotes());
-    	if(a.getClass() ==  AvionLigne.class) {
+    	if(a instanceof  AvionLigne) {
     		AvionLigne av = (AvionLigne)a;
     		result.addAll(av.getPersonnels());
     	}
@@ -71,12 +71,7 @@ public class Vol {
      * @return int
      */
     public int getNbPersonneABord() {
-		int nb = this.avion.getNbPilotes() + this.avion.getPassagers().size();
-		if(this.avion.getClass() == AvionLigne.class) {
-			AvionLigne a = (AvionLigne)this.avion;
-			nb += a.getNbPersonnels();
-		}
-		return nb;
+		return this.getOccupants().size();
 	}
     
     

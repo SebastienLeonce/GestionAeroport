@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.avion.AvionLigne;
+import com.gestion.aeroport.passager.Diplomate;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
@@ -32,6 +33,8 @@ public class Aeroport {
 	private HashMap<Compagnie, Queue<Pilote>> fileAttentePilote;
 	private HashMap<Compagnie, Queue<Personnel>> fileAttentePersonnel;
 	private HashMap<Program.Destination, Queue<Passager>> fileAttentePassager;
+	private HashMap<Program.Destination, Queue<Passager>> fileAttentePassagerPrive;
+	private HashMap<Program.Destination, Queue<Diplomate>> fileAttentePassagerDiplomatique;
 	private ArrayList<Pilote> reposPilote;
 	
 	
@@ -50,17 +53,27 @@ public class Aeroport {
 		this.fileAttentePilote = new HashMap<Compagnie, Queue<Pilote>>();
 		this.fileAttentePersonnel = new HashMap<Compagnie, Queue<Personnel>>();
 		this.fileAttentePassager = new HashMap<Program.Destination, Queue<Passager>>();
+		this.fileAttentePassagerPrive = new HashMap<Program.Destination, Queue<Passager>>();
+		this.fileAttentePassagerDiplomatique = new HashMap<Program.Destination, Queue<Diplomate>>();
 		this.avionsAuSol = new HashMap<Compagnie, ArrayList<Avion>>();
 		this.reposPilote = new ArrayList<Pilote>();
 		
 		
 		for(Program.Destination d : Program.Destination.values()) {
 			this.fileAttentePassager.put(d, new LinkedList<Passager>());
+			this.fileAttentePassagerPrive.put(d, new LinkedList<Passager>());
+			this.fileAttentePassagerDiplomatique.put(d, new LinkedList<Diplomate>());
 		}
 		
 	}
 	
 	
+	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassagerPrive() {
+		return fileAttentePassagerPrive;
+	}
+	public HashMap<Program.Destination, Queue<Diplomate>> getFileAttentePassagerDiplomatique() {
+		return fileAttentePassagerDiplomatique;
+	}
 	public HashMap<Compagnie, Queue<Personnel>> getFileAttentePersonnel() {
 		return fileAttentePersonnel;
 	}
@@ -183,22 +196,29 @@ public class Aeroport {
 				Vol v = new Vol(a, dest.getAeroport(), this, c);
 				Program.DemandeDecollage(v);
 				return true;
-				
-				
 			}
 		}
 		return false;		
 	}
 	
+	
+//	public void 
+	
+	
 	/**
-	 * Crï¿½er de nouveaux passagers dans l'aï¿½roport avec une destination random
+	 * Creer de nouveaux passagers dans l'aï¿½roport avec une destination random
 	 * @return nombre de passager crï¿½ï¿½
 	 */
 	public void ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
 		for(int i = 0; i < random; i++) {
 			Program.Destination d = Program.Destination.randomDestination();
-			this.getFileAttentePassager().get(d).add(new Passager(d.toString()));
+			Passager p = new Passager(d.toString());
+			if(p.isVolPrive()) {
+				this.getFileAttentePassagerPrive().get(d).add(p);
+			}else {
+				this.getFileAttentePassager().get(d).add(p);
+			}			
 		}
 		for(Compagnie c : Program.compagnies) {
 			random = MIN_ARRIVEE_PERSONNEL + (int)(Math.random() * ((MAX_ARRIVEE_PERSONNEL - MIN_ARRIVEE_PERSONNEL) + MIN_ARRIVEE_PERSONNEL ));
@@ -281,6 +301,11 @@ public class Aeroport {
 		for(Vol v : this.radar) {
 			Avion a = v.getAvion();
 			a.setVolCarburant(a.getVolCarburant() - a.getConsomamtionCarburant());
+			if(a.getConsomamtionCarburant() <= 0) {
+				System.out.println("Le vol " + v + " s'est écrasé par manque de carburant, vous avez à votre tache !");
+				Program.programRunning = false;
+			}
+				
 		}
 	}
 	/**
