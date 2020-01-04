@@ -110,7 +110,7 @@ private String prenom;
 	 * @param historique String
 	 */
 	public void setHistorique(String historique) {
-		this.historique = historique;
+		this.historique += historique;
 	}
 
 	/**

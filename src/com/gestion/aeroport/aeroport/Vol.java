@@ -22,6 +22,8 @@ public class Vol {
         this.compagnie = compagnie;
         this.numeroDeVol = compteur;
         compteur++;
+        
+        setInfoVol();
     }
 
     public Avion getAvion(){
@@ -39,6 +41,15 @@ public class Vol {
     public int getNumeroDeVol() {
 		return numeroDeVol;
 	}
+    
+    private void setInfoVol () {
+    	ArrayList<Passager> liste = getOccupants();
+    	
+    	for (Passager passager : liste) {
+    		passager.setNumeroVol(numeroDeVol);
+    		passager.setHistorique(aeroportDepart.getNom() + "->" + aeroportArrivee + ";");
+    	}
+    }
 
 	/**
      * Recupere tout les occupants du vol
