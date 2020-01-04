@@ -327,6 +327,7 @@ public class Program {
 				Scanner sc = new Scanner(System.in);
 				System.out.println("Sur quelle piste d'atterrissage faut-il faire atterir cet avion ?");
 				for(int j = 0; j< orly.getPistesAtterrissage().size(); j++) {
+					if (!orly.getPistesAtterrissage().get(j).getEnMarche()) {continue;}
 					System.out.print(j + " : ");
 					System.out.print(orly.getPistesAtterrissage().get(j));
 				}		
@@ -363,6 +364,7 @@ public class Program {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Sur quelle piste de decollage faut-il faire envoyer cet avion ?");
 			for(int j = 0; j< orly.getPistesDecollage().size(); j++) {
+				if (!orly.getPistesDecollage().get(j).getEnMarche()) {continue;}
 				System.out.print(j + " : ");
 				System.out.print(orly.getPistesDecollage().get(j));
 			}		
