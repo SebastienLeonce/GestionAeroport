@@ -2,6 +2,9 @@ package com.gestion.aeroport.passager;
 
 import java.util.Calendar;
 
+/**
+ * Diplomate vol toujours dans un avion diplomatique
+ */
 public class Diplomate extends Passager {
 	
 	private int code;
@@ -16,10 +19,11 @@ public class Diplomate extends Passager {
 	 * @param voyage
 	 * @param code
 	 */
-	public Diplomate(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, int code) {
-		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
+	public Diplomate(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive, int code) {
+		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
 		this.code = code;
 		this.setPriorite(true);
+		this.setVolPrive(false);
 	}
 	
 	/**

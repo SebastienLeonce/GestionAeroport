@@ -1,6 +1,14 @@
 package com.gestion.aeroport.passager;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import com.gestion.aeroport.aeroport.Aeroport;
+import com.gestion.aeroport.aeroport.Program;
+import com.gestion.aeroport.aeroport.Program.Destination;
 
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
@@ -8,7 +16,7 @@ import io.codearte.jfairy.producer.person.PersonProperties;
 
 public class Passager {
 	
-	private String prenom;
+private String prenom;
 	private String nom;
 	private Calendar anniversaire;
 	private String nationalite;
@@ -18,6 +26,7 @@ public class Passager {
 	private String historique = null; 
 	private int numeroVol = -1;
 	private boolean priorite = false;
+	private boolean volPrive;
 	
 	/**
 	 * Créer une personne en spécifiant sois même tous les paramètres
@@ -28,14 +37,14 @@ public class Passager {
 	 * @param numeroPasseport String
 	 * @param voyage String "depart|arriver"
 	 */
-	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage) {
+	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive) {
 		this.prenom = prenom;
 		this.nom = nom;
 		this.anniversaire = anniversaire;
 		this.nationalite = nationalite;
 		this.numeroPasseport = numeroPasseport;
-		
 		this.voyage = voyage;
+		this.volPrive = volPrive;
 	}
 	
 	/**
@@ -49,12 +58,29 @@ public class Passager {
 		this.prenom = person.firstName();
 		this.nom = person.lastName();
 		this.anniversaire = new Calendar.Builder(). setFields(Calendar.YEAR, Integer.parseInt(person.dateOfBirth().toString().substring(0, 4)), Calendar.MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(5, 7)) -1,Calendar.DAY_OF_MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(8, 10))).build();
-		this.nationalite = "fr";
+		this.nationalite = Program.randomNationalite();
 		this.numeroPasseport = person.passportNumber();
 
 		this.voyage = voyage;
+		
+		//1 chance sur 100 que le passager souhaite prendre un vol priv�
+		int random = 1 + (int)(Math.random() * ((100-1) + 1 ));
+		if(random == 1) {
+			this.volPrive = true;
+		}else {
+			this.volPrive = false;
+		}
 	}
 	
+	
+	public void setVolPrive(boolean volPrive) {
+		this.volPrive = volPrive;
+	}
+
+	public boolean isVolPrive() {
+		return volPrive;
+	}
+
 	/**
 	 * Permet d'obtenir le voyage du passager
 	 * @return Le voyage du passager

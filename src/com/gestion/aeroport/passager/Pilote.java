@@ -32,8 +32,8 @@ public class Pilote extends Passager {
 	 * @param passagersMax
 	 * @param tempsPause
 	 */
-	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, Compagnie employeur, int passagersMax, int tempsPause) {
-		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage);
+	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive, Compagnie employeur, int passagersMax, int tempsPause) {
+		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
 		this.employeur = employeur;
 		this.passagersMax = passagersMax;
 		this.tempsPause = tempsPause;

@@ -17,11 +17,24 @@ public class Program {
 
 	public static final int NB_COMPAGNIES = 5;
 	
+	/**
+	 * Contains all nationalites
+	 */
+	public static ArrayList<String> allNationalites = new ArrayList<String>();
+	/**
+	 * retrun a random nationalite
+	 * @return String
+	 */
+	public static String randomNationalite() {
+		return allNationalites.get((int)(Math.random() * allNationalites.size()));
+	}
+	
+	
 	public static ArrayList<Compagnie> compagnies;
 	public static ArrayList<Avion> avionEnVol;
 	public static Aeroport orly;
 	public static ArrayList<Aeroport> autresAeroports;
-	
+	public static boolean programRunning = true;
 	
 	public static enum Destination {
         LONDRES(new Aeroport("Londres")),
@@ -123,11 +136,7 @@ public class Program {
 				}
 			}
 		}
-		avionEnVol = new ArrayList<Avion>();		
-		boolean programRunning = true;
-		
-		
-		
+		avionEnVol = new ArrayList<Avion>();			
 		
 		while(programRunning) {
 			//Repos des Pilotes
