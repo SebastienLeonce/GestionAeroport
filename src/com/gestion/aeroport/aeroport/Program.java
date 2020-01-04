@@ -137,7 +137,7 @@ public class Program {
 			System.out.println("==========Demande d'Atterissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Atterissage==========");
-			orly.Atterrissage();
+			orly.Atterrissage(); 
 			
 			//Decollage);
 			System.out.println("==========Decollage==========");

@@ -323,130 +323,163 @@ public class Aeroport {
 	public boolean eteindrePiste(int id) {
 		int enMarche = 0;
 		Piste piste = null;
-		ArrayList<ArrayList<Vol>> parts;
-		ArrayList<Vol> fileAttente = new ArrayList<Vol>();
-		int k = 0;
-		
+		int nbAvionsPiste = 99999;
+		int idPisteVide = -1;
+		ArrayList<Vol> liste;
+
+		//////////////////////////
+		//Fermeture piste decollage
 		for (int i = 0; i < pistesDecollage.size(); i++) {
-	        if (pistesDecollage.get(i).getEnMarche()) {
-	        	enMarche++;
-	        }
-	        
-	        if (pistesDecollage.get(i).getId() == id) {
-	        	piste = pistesDecollage.get(i);
-	        }
-	    }
-		
-		// on ferme une piste de decollage
-		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
-			piste.setEnMarche(false);
 			
-			parts = chopped(piste.getFileDAttente(), enMarche - 1);
+			if (pistesDecollage.get(i).getId() == id && pistesDecollage.get(i).getEnMarche()) {
+				piste = pistesDecollage.get(i);
+			} else if (pistesDecollage.get(i).getEnMarche()) {
+				enMarche++;
+			}
+		}
+		
+		if (enMarche >= 1 && piste != null) {
+		
+			for (int i = 0; i < piste.getFileDAttente().size(); i++) {
+				
+				for (int j = 0; j < pistesDecollage.size(); j++) {
+					if (pistesDecollage.get(j).getEnMarche() && pistesDecollage.get(j).getFileDAttente().size() < nbAvionsPiste) {
+						idPisteVide = j;
+						nbAvionsPiste = pistesDecollage.get(j).getFileDAttente().size();
+					}
+				}
+				
+				liste = pistesDecollage.get(idPisteVide).getFileDAttente();
+				liste.add(piste.getFileDAttente().get(i));
+				pistesDecollage.get(idPisteVide).setFileDAttente(liste);
+			}
 			
 			piste.setFileDAttente(new ArrayList<Vol>());
-			
-			for (int i = 0; i < pistesDecollage.size(); i++) {
-				if (pistesDecollage.get(i).getEnMarche()) {
-					fileAttente.addAll(pistesDecollage.get(i).getFileDAttente());
-					fileAttente.addAll(parts.get(k));
-
-					pistesDecollage.get(i).setFileDAttente(fileAttente);
-					
-					k++;
-				}
-			}
+			piste.setEnMarche(false);
 			
 			return true;
 		}
 		
 		enMarche = 0;
-		piste = null;
 		
+		/////////////////////////////
+		//Fermeture piste atterissage
 		for (int i = 0; i < pistesAtterrissage.size(); i++) {
-	        if (pistesAtterrissage.get(i).getEnMarche()) {
-	        	enMarche++;
-	        }
-	        
-	        if (pistesAtterrissage.get(i).getId() == id) {
-	        	piste = pistesAtterrissage.get(i);
-	        }
-	    }
+			
+			if (pistesAtterrissage.get(i).getId() == id && pistesAtterrissage.get(i).getEnMarche()) {
+				piste = pistesAtterrissage.get(i);
+			} else if (pistesAtterrissage.get(i).getEnMarche()) {
+				enMarche++;
+			}
+		}
 		
-		// on ferme une piste d'atterissage
-		if (piste != null && enMarche > 1 && piste.getEnMarche() == true) { 
-			piste.setEnMarche(false);
-			
-			parts = chopped(piste.getFileDAttente(), enMarche - 1);
-			
-			piste.setFileDAttente(new ArrayList<Vol>());
-			
-			for (int i = 0; i < pistesAtterrissage.size(); i++) {
-				if (pistesAtterrissage.get(i).getEnMarche()) {
-					fileAttente.addAll(pistesAtterrissage.get(i).getFileDAttente());
-					fileAttente.addAll(parts.get(k));
-
-					pistesAtterrissage.get(i).setFileDAttente(fileAttente);
-					
-					k++;
+		if (enMarche >= 1 && piste != null) {
+		
+			for (int i = 0; i < piste.getFileDAttente().size(); i++) {
+				
+				for (int j = 0; j < pistesAtterrissage.size(); j++) {
+					if (pistesAtterrissage.get(j).getEnMarche() && pistesAtterrissage.get(j).getFileDAttente().size() < nbAvionsPiste) {
+						idPisteVide = j;
+						nbAvionsPiste = pistesAtterrissage.get(j).getFileDAttente().size();
+					}
 				}
+				
+				liste = pistesAtterrissage.get(idPisteVide).getFileDAttente();
+				liste.add(piste.getFileDAttente().get(i));
+				pistesAtterrissage.get(idPisteVide).setFileDAttente(liste);
 			}
 			
+			piste.setFileDAttente(new ArrayList<Vol>());
+			piste.setEnMarche(false);
+			
 			return true;
 		}
 		
 		return false;
 	}
 	
-	////////////////////////////////////////////////////
-	//       partage de file d'attente a faire        //
-	////////////////////////////////////////////////////
+	
 	public boolean ouvrirPiste(int id) {
 		Piste piste = null;
+		int moyenne = 0;
+		int enMarche = 0;
+		int nbAvionsPiste = -1;
+		int idPiste = -1;
+		ArrayList<Vol> liste;
 		
+		// Ouverture piste decollage
 		for (int i = 0; i < pistesDecollage.size(); i++) {
 	        
-	        if (pistesDecollage.get(i).getId() == id) {
+	        if (pistesDecollage.get(i).getId() == id && !pistesDecollage.get(i).getEnMarche()) {
 	        	piste = pistesDecollage.get(i);
+	        } else if (pistesDecollage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        	moyenne += pistesDecollage.get(i).getFileDAttente().size();
 	        }
-	        //if en marche // enmarche++ // 
 	    }
 		
-		// on ouvre une piste de decollage
-		if (piste != null && piste.getEnMarche() == false) { 
+		if (piste != null) {
+			moyenne /= enMarche;
+			
+			while (piste.getFileDAttente().size() < moyenne) {
+				for (int i = 0; i < pistesDecollage.size(); i++) {
+					
+					if (pistesDecollage.get(i).getEnMarche() && pistesDecollage.get(i).getFileDAttente().size() > nbAvionsPiste) {
+						idPiste = i;
+						nbAvionsPiste = pistesDecollage.get(i).getFileDAttente().size();
+					}
+				}
+				liste = piste.getFileDAttente();
+				liste.add(pistesDecollage.get(idPiste).getFileDAttente().get(0));
+				piste.setFileDAttente(liste);
+				
+				liste = pistesDecollage.get(idPiste).getFileDAttente();
+				liste.remove(0);
+				pistesDecollage.get(idPiste).setFileDAttente(liste);			
+			}
+			
 			piste.setEnMarche(true);
-			// for // piste a prendre enMarche / (n - 1) // rajouter dans la piste ouverte
-			return true;
+			return true;	
 		}
-	
-		piste = null;
 		
+		moyenne = 0;
+		enMarche = 0;
+		
+		// Ouverture piste atterissage
 		for (int i = 0; i < pistesAtterrissage.size(); i++) {
-	       
-	        if (pistesAtterrissage.get(i).getId() == id) {
+		        
+			if (pistesAtterrissage.get(i).getId() == id && !pistesAtterrissage.get(i).getEnMarche()) {
 	        	piste = pistesAtterrissage.get(i);
-	        }
+	        } else if (pistesAtterrissage.get(i).getEnMarche()) {
+	        	enMarche++;
+	        	moyenne += pistesAtterrissage.get(i).getFileDAttente().size();
+		    }
 	    }
-		
-		// on ouvre une piste d'atterissage
-		if (piste != null && piste.getEnMarche() == false) { 
+				
+		if (piste != null) {
+			moyenne /= enMarche;
+					
+			while (piste.getFileDAttente().size() < moyenne) {
+				for (int i = 0; i < pistesAtterrissage.size(); i++) {
+							
+					if (pistesAtterrissage.get(i).getEnMarche() && pistesAtterrissage.get(i).getFileDAttente().size() > nbAvionsPiste) {
+						idPiste = i;
+						nbAvionsPiste = pistesAtterrissage.get(i).getFileDAttente().size();
+					}
+				}
+				liste = piste.getFileDAttente();
+				liste.add(pistesAtterrissage.get(idPiste).getFileDAttente().get(0));
+				piste.setFileDAttente(liste);
+					
+				liste = pistesAtterrissage.get(idPiste).getFileDAttente();
+				liste.remove(0);
+				pistesAtterrissage.get(idPiste).setFileDAttente(liste);			
+			}
+				
 			piste.setEnMarche(true);
-			return true;
-		}
+			return true;	
+		}			
 		
 		return false;
-	}
-	
-	// Decoupe une arrayList en L arrayList
-	static <T> ArrayList<ArrayList<T>> chopped(ArrayList<T> list, final int L) {
-		ArrayList<ArrayList<T>> parts = new ArrayList<ArrayList<T>>();
-	    final int N = list.size();
-	    for (int i = 0; i < N; i += L) {
-	        parts.add(new ArrayList<T>(
-	            list.subList(i, Math.min(N, i + L)))
-	        );
-	    }
-	    return parts;
-	}
-	
-	
+	}	
 }
