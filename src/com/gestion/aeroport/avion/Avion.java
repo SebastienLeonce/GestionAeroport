@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.gestion.aeroport.aeroport.Compagnie;
+import com.gestion.aeroport.aeroport.Program;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Pilote;
 
@@ -74,8 +75,6 @@ public abstract class Avion {
 
 	
 	
-	
-	//O prive 1 ligne 2 diplo
 	public static ArrayList<Avion> generate(int n, Compagnie c) throws IOException{
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/planes.dat");
 		ArrayList<Avion> avions = new ArrayList<Avion>();
@@ -102,9 +101,12 @@ public abstract class Avion {
 				float consommationCarburant= CONSOMMATION_MIN + (int)(Math.random() * ((CONSOMMATION_MAX-CONSOMMATION_MIN) + 1 ));
 				
 				
-				if (c.getNom().equals("\"Private flight\"")) {
-					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, new Passager("null")));
-				} else {
+				if (c.getNom().equals(Compagnie.NOM_COMPAGNIE_PRIVEE)) {
+					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, new Passager("null", true)));
+				} 
+				else if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE)){
+					avions.add(new AvionDiplomatique(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, null));
+				}else {
 					int nbPersonnels = PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 ));
 					avions.add(new AvionLigne(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, nbPersonnels, c));
 				}

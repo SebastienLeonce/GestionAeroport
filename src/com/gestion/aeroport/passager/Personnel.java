@@ -28,8 +28,8 @@ public class Personnel extends Passager {
 	 * 
 	 * @param compagnie
 	 */
-	public Personnel (Compagnie compagnie) {
-		super(null);
+	public Personnel (Compagnie compagnie, boolean volPrive) {
+		super(null, volPrive);
 		this.compagnie = compagnie;
 	}
 
@@ -44,7 +44,12 @@ public class Personnel extends Passager {
 	public static ArrayList<Personnel> generate(int n, Compagnie c){
 		ArrayList<Personnel> personnels = new ArrayList<Personnel>();
 		for (int i = 0 ; i < n ; i++) {
-			personnels.add(new Personnel(c));
+			if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_PRIVEE)) {
+				personnels.add(new Personnel(c, true));
+			}
+			else {
+				personnels.add(new Personnel(c, false));
+			}
 		}
 		return personnels;
 	}

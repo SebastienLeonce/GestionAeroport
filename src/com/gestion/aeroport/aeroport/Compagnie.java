@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.avion.AvionDiplomatique;
 import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
 
@@ -25,6 +26,9 @@ public class Compagnie {
 	public static final int PERSONNEL_MAX = 300;
 	public static final int AVION_MIN = 10;
 	public static final int AVION_MAX = 50;	
+	
+	public static final String NOM_COMPAGNIE_PRIVEE = "\"Private flight\"";
+	public static final String NOM_COMPAGNIE_DIPLOMATIQUE = "\"Diplomatic Flight\"";
 	
 	private String nom;
 	private String nationalite;
@@ -147,8 +151,19 @@ public class Compagnie {
 		}
 	}
 	
-	
-	
+	/**
+	 * Utilise un pilote en particulier 
+	 * @param Pilote doit appartenir à la compagnie
+	 */
+	public void setUtilise(Pilote o) {
+		if(this.pilotesDispo.contains(o)) {
+			this.pilotesUtilise.add(o);
+			this.pilotesDispo.remove(o);
+		}
+		else {
+			System.out.println("Le pilote : " + o + " n'appartient pas à la compagnie " + this.getNom());
+		}
+	}
 	
 	
 	/**
@@ -209,17 +224,30 @@ public class Compagnie {
 			i++;
 		}
 		
+		//Compagnie Diplomatique index 0
+		Compagnie diplo = new Compagnie(Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE, "\"\"");
+		int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
+		int nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )));
+		int nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )));
+		ArrayList<Pilote> pilotes = null;
+		ArrayList<Avion>  avions = Avion.generate(nbAvions, diplo);
+		ArrayList<Personnel>  personnels = null;
+		diplo.setPilotesDispo(pilotes);
+		diplo.setFlotteDispo(avions);
+		diplo.setPersonnelsDispo(personnels);
+		compagnies.add(diplo);
+		
+		//Compagnie Privée Index 1
 		for (int j = 0 ; j < n ; j++) { 		
-			int nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
-			int nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )));
-			int nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )));
+			nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
+			nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )));
+			nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )));
 			
 			Compagnie comp = new Compagnie(data.get(j)[1], data.get(j)[6]);
 			
-			ArrayList<Pilote> pilotes = Pilote.generate(nbPilotes, comp);
-			ArrayList<Avion>  avions = Avion.generate(nbAvions, comp);
-			ArrayList<Personnel>  personnels = Personnel.generate(nbPersonnels, comp);
-			//avion diplo ?
+			pilotes = Pilote.generate(nbPilotes, comp);
+			avions = Avion.generate(nbAvions, comp);
+			personnels = Personnel.generate(nbPersonnels, comp);
 			comp.setPilotesDispo(pilotes);
 			comp.setFlotteDispo(avions);
 			comp.setPersonnelsDispo(personnels);

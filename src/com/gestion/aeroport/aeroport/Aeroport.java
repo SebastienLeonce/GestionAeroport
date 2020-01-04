@@ -190,7 +190,7 @@ public class Aeroport {
 					n =  maxPassagerAttente;
 				}			
 				for(int i = 0; i < n; i++) {
-					a.ajouterPassager(new Passager(dest.toString()));
+					a.ajouterPassager(new Passager(dest.toString(), false));
 				}
 				
 				Vol v = new Vol(a, dest.getAeroport(), this, c);
@@ -201,8 +201,10 @@ public class Aeroport {
 		return false;		
 	}
 	
-	
-//	public void 
+	public void generateVolPrive() {
+		Compagnie c = Program.compagnies.get(1);
+		
+	}
 	
 	
 	/**
@@ -213,12 +215,16 @@ public class Aeroport {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
 		for(int i = 0; i < random; i++) {
 			Program.Destination d = Program.Destination.randomDestination();
-			Passager p = new Passager(d.toString());
-			if(p.isVolPrive()) {
+			Passager p;
+			//1 chance sur 100 que le passager souhaite prendre un vol privé
+			int r = 1 + (int)(Math.random() * ((100-1) + 1 ));
+			if(r == 1) {
+				p = new Passager(d.toString(), true);
 				this.getFileAttentePassagerPrive().get(d).add(p);
 			}else {
+				p = new Passager(d.toString(), false);
 				this.getFileAttentePassager().get(d).add(p);
-			}			
+			}	
 		}
 		for(Compagnie c : Program.compagnies) {
 			random = MIN_ARRIVEE_PERSONNEL + (int)(Math.random() * ((MAX_ARRIVEE_PERSONNEL - MIN_ARRIVEE_PERSONNEL) + MIN_ARRIVEE_PERSONNEL ));
@@ -276,8 +282,10 @@ public class Aeroport {
 					this.avionsAuSol.get(v.getCompagnie()).remove(a);
 					v.getCompagnie().setUtilisable(a);
 					for(Pilote pilote : a.getPilotes()) {
-						v.getCompagnie().setUtilisable(pilote);
+						pilote.getEmployeur().setUtilisable(pilote);
 					}
+				
+					
 					if(a instanceof AvionLigne) {
 						AvionLigne al = (AvionLigne)a;
 						for(Personnel personnel : al.getPersonnels()) {

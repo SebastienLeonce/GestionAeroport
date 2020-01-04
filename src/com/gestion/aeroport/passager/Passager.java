@@ -51,27 +51,27 @@ private String prenom;
 	 * Créer une personne aléatoire juste besoins de spécifier son voyage
 	 * @param voyage String "depart|arriver"
 	 */
-	public Passager (String voyage) {
+	public Passager (String voyage, boolean volPrive) {
+		this.nationalite = Program.randomNationalite();
+		
 		Fairy fairy = Fairy.create();
 		Person person = fairy.person(PersonProperties.ageBetween(18, 50));
 		
 		this.prenom = person.firstName();
 		this.nom = person.lastName();
 		this.anniversaire = new Calendar.Builder(). setFields(Calendar.YEAR, Integer.parseInt(person.dateOfBirth().toString().substring(0, 4)), Calendar.MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(5, 7)) -1,Calendar.DAY_OF_MONTH, Integer.parseInt(person.dateOfBirth().toString().substring(8, 10))).build();
-		this.nationalite = Program.randomNationalite();
+		
 		this.numeroPasseport = person.passportNumber();
 
 		this.voyage = voyage;
+		this.volPrive = volPrive;
 		
-		//1 chance sur 100 que le passager souhaite prendre un vol priv�
-		int random = 1 + (int)(Math.random() * ((100-1) + 1 ));
-		if(random == 1) {
-			this.volPrive = true;
-		}else {
-			this.volPrive = false;
-		}
 	}
 	
+	public Passager(String voyage, boolean volPrive, String nationalite) {
+		this(voyage, volPrive);
+		this.nationalite = nationalite;
+	}
 	
 	public void setVolPrive(boolean volPrive) {
 		this.volPrive = volPrive;

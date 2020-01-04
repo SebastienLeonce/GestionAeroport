@@ -45,8 +45,8 @@ public class Pilote extends Passager {
 	 * 
 	 * @param employeur
 	 */
-	public Pilote (Compagnie employeur) {
-		super(null);
+	public Pilote (Compagnie employeur, boolean volPrive) {
+		super(null, volPrive);
 		this.employeur = employeur;
 		this.passagersMax = new Random().nextInt(PASSAGERMAX_MAX - PASSAGERMAX_MIN + 1)  + PASSAGERMAX_MIN;
 		this.tempsPause = new Random().nextInt(TEMPSPOSE_MAX - TEMPSPOSE_MIN + 1)  + TEMPSPOSE_MIN;
@@ -101,7 +101,12 @@ public class Pilote extends Passager {
 	public static ArrayList<Pilote> generate(int n, Compagnie c){
 		ArrayList<Pilote> pilotes = new ArrayList<Pilote>();
 		for (int i = 0 ; i < n ; i++) {
-			pilotes.add(new Pilote(c));
+			if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_PRIVEE)) {
+				pilotes.add(new Pilote(c, true));
+			}
+			else {
+				pilotes.add(new Pilote(c, false));
+			}
 		}
 		return pilotes;
 	}

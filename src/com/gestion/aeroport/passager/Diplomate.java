@@ -31,8 +31,8 @@ public class Diplomate extends Passager {
 	 * @param voyage
 	 * @param code
 	 */
-	public Diplomate (String voyage, int code) {
-		super(voyage);
+	public Diplomate (String voyage,int code, String nationalite) {
+		super(voyage, false, nationalite);
 		this.code = code;
 		this.setPriorite(true);
 	}

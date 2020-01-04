@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.avion.AvionDiplomatique;
 import com.gestion.aeroport.avion.AvionLigne;
+import com.gestion.aeroport.passager.Diplomate;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
@@ -29,7 +32,10 @@ public class Program {
 		return allNationalites.get((int)(Math.random() * allNationalites.size()));
 	}
 	
-	
+	/**
+	 * Compagnie Diplomatique index 0
+	 * Compagnie Privee index 1
+	 */
 	public static ArrayList<Compagnie> compagnies;
 	public static ArrayList<Avion> avionEnVol;
 	public static Aeroport orly;
@@ -100,32 +106,8 @@ public class Program {
 			orly.getFileAttentePersonnel().put(c,new LinkedList<Personnel>());
 			orly.getAvionsAuSol().put(c,new ArrayList<Avion>());
 			
-			//De 1 à 10 pilotes en attentes
-			int random = 1 + (int)(Math.random() * ((10-1) + 1 ));
-			ArrayList<Pilote> pilotes;
-			try {
-				pilotes = c.utiliserDesPilotes(random);
-				for(Pilote p : pilotes) {
-					orly.getFileAttentePilote().get(c).add(p);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-			//De 5 à 30 personnel en attentes
-			random = 5 + (int)(Math.random() * ((30-5) + 1 ));
-			ArrayList<Personnel> personnels;
-			try {
-				personnels = c.utiliserDuPersonnel(random);
-				for(Personnel p : personnels) {
-					orly.getFileAttentePersonnel().get(c).add(p);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
 			//De 0 à 4 avions par compagnie en attente
-			random = 0 + (int)(Math.random() * ((4-0) + 0 ));
+			int random = 0 + (int)(Math.random() * ((4-0) + 0 ));
 			for(int j = 0; j < random; j++) {
 				Avion a;
 				try {
@@ -135,6 +117,34 @@ public class Program {
 					e.printStackTrace();
 				}
 			}
+			
+			//Cas où Diplomatique
+			if(i != 0) {
+				//De 1 à 10 pilotes en attentes
+				random = 1 + (int)(Math.random() * ((10-1) + 1 ));
+				ArrayList<Pilote> pilotes;
+				try {
+					pilotes = c.utiliserDesPilotes(random);
+					for(Pilote p : pilotes) {
+						orly.getFileAttentePilote().get(c).add(p);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				//De 5 à 30 personnel en attentes
+				random = 5 + (int)(Math.random() * ((30-5) + 1 ));
+				ArrayList<Personnel> personnels;
+				try {
+					personnels = c.utiliserDuPersonnel(random);
+					for(Personnel p : personnels) {
+						orly.getFileAttentePersonnel().get(c).add(p);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
 		}
 		avionEnVol = new ArrayList<Avion>();			
 		
@@ -148,6 +158,8 @@ public class Program {
 			System.out.println("==========Atterissage==========");
 			orly.Atterrissage(); 
 			
+			
+			/*
 			//Decollage);
 			System.out.println("==========Decollage==========");
 			orly.Decollage();
@@ -225,7 +237,7 @@ public class Program {
 			System.out.println("==========Consommation de Carburant==========");
 			orly.consommationCarburant();
 			
-			
+			*/
 		}
 	}
 	
@@ -283,14 +295,42 @@ public class Program {
 	
 	
 	public static void DemandeAtterissage() {
-		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
-		
+		//Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
+		Compagnie c = compagnies.get(0);
 		Avion a = null;
 		try {
 			a = c.utiliserUnAvion();
-			ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
-			for(Pilote p: pilotes) {
-				a.ajouterPilote(p);
+			//Recherches de pilotes de la même nationalité pour la compagnie diplomatique
+			if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE)) {
+				AvionDiplomatique ad = (AvionDiplomatique)a;
+				String etat = Program.randomNationalite();
+				ad.setEtat(etat);
+				int compt = 0;
+				for(int i = 1; i < compagnies.size(); i++) {
+					if(compt >= ad.getNbPilotesMin()) {
+						break;
+					}
+					Iterator<Pilote> iterator = compagnies.get(i).getPilotesDispo().iterator();
+					while(iterator.hasNext() && compt < ad.getNbPilotesMin()) {
+						Pilote p = iterator.next();
+						if(p.getNationalite().equals(etat)) {
+							iterator.remove();
+							compagnies.get(i).getPilotesUtilise().add(p);
+							ad.ajouterPilote(p);
+							compt++;
+						}
+					}
+				}
+				if(ad.getNbPilotes() < ad.getNbPilotesMin()) {
+					a = null;
+				}
+			}
+			else {
+				ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
+				for(Pilote p: pilotes) {
+					a.ajouterPilote(p);
+				}
+				
 			}
 			if(a instanceof AvionLigne) {
 				AvionLigne avion = (AvionLigne)a;
@@ -301,15 +341,38 @@ public class Program {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 			a = null;
 		}
 		
 		if(a != null) {
 			
-			for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
-				a.ajouterPassager(new Passager("Orly"));
+			switch (c.getNom()) {
+				case Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE:
+					if(a instanceof AvionDiplomatique) {
+						AvionDiplomatique ad = (AvionDiplomatique)a;
+						//Genere un nombre de passager entre 1 et le maximum de passager possible dans l'avion
+						int random = 1 + (int)(Math.random() * (((a.getCapaciteMax()-a.getCapacite())-1) + 1 ));
+						for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
+							 //Secret code is 42 don't tell anyone
+							ad.ajouterPassager(new Diplomate("Orly", 42, ad.getEtat())); 
+						}					
+					}
+					break;
+				case Compagnie.NOM_COMPAGNIE_PRIVEE:
+					//Genere un nombre de passager entre 1 et le maximum de passager possible dans l'avion
+					int random = 1 + (int)(Math.random() * (((a.getCapaciteMax()-a.getCapacite())-1) + 1 ));
+					for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
+						a.ajouterPassager(new Passager("Orly", true));
+					}
+					break;
+				default:
+					for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
+						a.ajouterPassager(new Passager("Orly", false));
+					}
+					break;
 			}
+			
 			
 			//Set Carburant low 
 			a.setVolCarburant(a.getVolCarburant() - (Avion.CARBURANT_MIN-10)); // au min l'avion a 10 de carburant

@@ -17,6 +17,18 @@ public class AvionDiplomatique extends Avion {
 		
 	}
 	
+	
+	
+	
+	public String getEtat() {
+		return etat;
+	}
+
+	public void setEtat(String etat) {
+		this.etat = etat;
+	}
+
+
 	public boolean ajouterPassager (Diplomate passager) {
 		return super.ajouterPassager(passager);
 	}
