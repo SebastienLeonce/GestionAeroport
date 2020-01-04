@@ -8,6 +8,7 @@ import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.avion.AvionLigne;
+import com.gestion.aeroport.avion.AvionPrive;
 import com.gestion.aeroport.passager.Diplomate;
 import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Personnel;
@@ -137,7 +138,9 @@ public class Aeroport {
 		//Compagnie avec le plus de pilotes en attente et au moins 1 avion au sol
 		Compagnie c = null;
 		int maxPiloteAttente = 0;
-		for(Compagnie comp : Program.compagnies) {
+		//Toutes les compagnies sauf Prive et Diplomatique
+		for(int i = 2; i < Program.compagnies.size();i++) {
+			Compagnie comp = Program.compagnies.get(i);
 			if(this.fileAttentePilote.get(comp).size() > maxPiloteAttente && this.avionsAuSol.get(comp).size() > 0) {
 				c = comp;
 				maxPiloteAttente = this.fileAttentePilote.get(comp).size();
@@ -202,27 +205,63 @@ public class Aeroport {
 	}
 	
 	public void generateVolPrive() {
+		System.out.println("=========Preparation d'un Vol Prive==========");
 		Compagnie c = Program.compagnies.get(1);
-		
+		for(Program.Destination d : Program.Destination.values()) {
+			if(this.fileAttentePassagerPrive.get(d).size() > 0) {
+				if(this.avionsAuSol.get(c).size() > 0) {
+					AvionPrive a = (AvionPrive)this.avionsAuSol.get(c).get(0);
+					if(this.fileAttentePilote.get(c).size() >= a.getNbPilotesMin()) {
+						for(int i = 0 ; i <a.getNbPilotesMin(); i++) {
+							a.ajouterPilote(this.getFileAttentePilote().get(c).remove());
+						}
+						for(int i = 0; i <= this.fileAttentePassagerPrive.get(d).size(); i++) {
+							a.ajouterPassager(this.fileAttentePassagerPrive.get(d).remove());
+						}
+						this.avionsAuSol.get(c).remove(a);
+						Vol v = new Vol(a, d.getAeroport(), this, c);
+						Program.DemandeDecollage(v);
+					}
+					else {
+						System.out.println("En attente de " + (a.getNbPilotesMin() - this.fileAttentePilote.get(c).size()) +  " pilote(s) disponible(s) pour un vol privé à destination de " + d.toString());
+					}
+				}
+				else {
+					System.out.println("En attente d'un avion disponible pour un vol privé à destination de " + d.toString());
+				}
+			}
+		}
+	}
+	public void generateVolDiplomatique() {
+		System.out.println("=========Preparation d'un Vol Diplomatique==========");
 	}
 	
 	
 	/**
-	 * Creer de nouveaux passagers dans l'aï¿½roport avec une destination random
+	 * Creer de nouveaux passagers dans l'aeroport avec une destination random
 	 * @return nombre de passager crï¿½ï¿½
 	 */
 	public void ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
+		boolean prive = false;
+		boolean diplomate = false;
+		
 		for(int i = 0; i < random; i++) {
 			Program.Destination d = Program.Destination.randomDestination();
-			Passager p;
 			//1 chance sur 100 que le passager souhaite prendre un vol privé
 			int r = 1 + (int)(Math.random() * ((100-1) + 1 ));
 			if(r == 1) {
-				p = new Passager(d.toString(), true);
+				Passager p = new Passager(d.toString(), true);
 				this.getFileAttentePassagerPrive().get(d).add(p);
-			}else {
-				p = new Passager(d.toString(), false);
+				prive = true;
+			}
+			else if (r == 2){
+				Diplomate p = new Diplomate(d.toString(), 42, Program.randomNationalite());
+				this.getFileAttentePassagerDiplomatique().get(d).add(p);
+				diplomate = true;
+			}
+			else {
+				Passager p = new Passager(d.toString(), false);
 				this.getFileAttentePassager().get(d).add(p);
 			}	
 		}
@@ -238,6 +277,16 @@ public class Aeroport {
 				}
 			}
 		}
+		//Si un ou plusieurs passagers a vol prive sont arrives son vol est pepare
+		if(prive) {
+			this.generateVolPrive();
+		}
+		//Si un ou plusieurs diplomate a vol prive sont arrives son vol est pepare
+		if(diplomate) {
+			this.generateVolDiplomatique();
+		}
+		
+		
 	}
 		
 	

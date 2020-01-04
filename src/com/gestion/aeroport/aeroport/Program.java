@@ -100,14 +100,14 @@ public class Program {
 		
 		//Initialisation des Compagnies et des avions/personnels/pilotes dans l'aeroport
 		compagnies = Compagnie.generate(NB_COMPAGNIES);
-		for(int i = 0; i < NB_COMPAGNIES ; i++) {
+		for(int i = 0; i < NB_COMPAGNIES; i++) {
 			Compagnie c = compagnies.get(i);
 			orly.getFileAttentePilote().put(c,new LinkedList<Pilote>());
 			orly.getFileAttentePersonnel().put(c,new LinkedList<Personnel>());
 			orly.getAvionsAuSol().put(c,new ArrayList<Avion>());
 			
 			//De 0 à 4 avions par compagnie en attente
-			int random = 0 + (int)(Math.random() * ((4-0) + 0 ));
+			int random = 1 + (int)(Math.random() * ((4-1) + 1 ));
 			for(int j = 0; j < random; j++) {
 				Avion a;
 				try {
@@ -118,10 +118,10 @@ public class Program {
 				}
 			}
 			
-			//Cas où Diplomatique
+			//Cas non Diplomatique
 			if(i != 0) {
-				//De 1 à 10 pilotes en attentes
-				random = 1 + (int)(Math.random() * ((10-1) + 1 ));
+				//De 3 à 10 pilotes en attentes
+				random = 3 + (int)(Math.random() * ((10-3) + 1 ));
 				ArrayList<Pilote> pilotes;
 				try {
 					pilotes = c.utiliserDesPilotes(random);
@@ -156,10 +156,10 @@ public class Program {
 			System.out.println("==========Demande d'Atterissage==========");
 			Program.DemandeAtterissage();
 			System.out.println("==========Atterissage==========");
-			orly.Atterrissage(); 
+			orly.Atterrissage();
 			
 			
-			/*
+			
 			//Decollage);
 			System.out.println("==========Decollage==========");
 			orly.Decollage();
@@ -237,7 +237,6 @@ public class Program {
 			System.out.println("==========Consommation de Carburant==========");
 			orly.consommationCarburant();
 			
-			*/
 		}
 	}
 	
@@ -295,8 +294,8 @@ public class Program {
 	
 	
 	public static void DemandeAtterissage() {
-		//Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
-		Compagnie c = compagnies.get(0);
+		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
+		//Compagnie c = compagnies.get(0);
 		Avion a = null;
 		try {
 			a = c.utiliserUnAvion();

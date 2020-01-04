@@ -238,7 +238,8 @@ public class Compagnie {
 		compagnies.add(diplo);
 		
 		//Compagnie Privée Index 1
-		for (int j = 0 ; j < n ; j++) { 		
+		//n-1 car compagnie diplomatique cree 
+		for (int j = 0 ; j < n -1 ; j++) { 		
 			nbPilotes = PILOTE_MIN + (int)(Math.random() * ((PILOTE_MAX - PILOTE_MIN) + 1 ));
 			nbAvions = (AVION_MIN + (int)(Math.random() * ((AVION_MAX-AVION_MIN) + 1 )));
 			nbPersonnels = (PERSONNEL_MIN + (int)(Math.random() * ((PERSONNEL_MAX-PERSONNEL_MIN) + 1 )));
