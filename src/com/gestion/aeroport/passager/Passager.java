@@ -84,7 +84,7 @@ public class Passager {
 	 * @param historique String
 	 */
 	public void setHistorique(String historique) {
-		this.historique = historique;
+		this.historique += historique;
 	}
 
 	/**
