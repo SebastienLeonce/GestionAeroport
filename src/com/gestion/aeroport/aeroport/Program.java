@@ -192,9 +192,9 @@ public class Program {
 				System.out.println("Choisissez une action : ");
 				System.out.println("0 : Ne Rien Faire");
 				System.out.println("1 : Fermeture temporaire d'une piste");
-				System.out.println("2 : R�ouverture d'une piste");
+				System.out.println("2 : Reouverture d'une piste");
 				System.out.println("3 : Annulation d'un vol");
-				System.out.println("4 : Passage en priorit� d'un vol");
+				System.out.println("4 : Passage en priorite d'un vol");
 				System.out.println("5 : Fin du programme");
 				
 				if(sc.hasNextInt()) {
@@ -209,16 +209,16 @@ public class Program {
 							Program.fermeturePiste();
 							break;
 						case 2:
-							//Penser au modification des files d'attentes
-							System.out.println("R�ouverture d'une piste");
+							System.out.println("Reouverture d'une piste");
 							Program.reouverturePiste();
 							break;
 						case 3:
 							System.out.println("Annulation d'un vol");
+							Program.annulationVol();
 							break;
 						case 4:
 							//modification file d'attente de l'avion
-							System.out.println("Passage en priorit� d'un vol");
+							System.out.println("Passage en priorite d'un vol");
 							break;
 						case 5:
 							System.out.println("Fin du programme");
@@ -256,7 +256,7 @@ public class Program {
 			
 			if(sc.hasNextInt()) {
 				actionValidee = orly.eteindrePiste(sc.nextInt());	
-				System.out.println("Entrer un id de piste valide ou �criver \"exit\"\n");
+				System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
@@ -282,7 +282,7 @@ public class Program {
 				
 			if(sc.hasNextInt()) {
 				actionValidee = orly.ouvrirPiste(sc.nextInt());	
-				System.out.println("Entrer un id de piste valide ou �criver \"exit\"\n");
+				System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
@@ -291,7 +291,30 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
-	
+	//Ouverture d'une piste
+	private static void annulationVol () {
+		System.out.println("Liste des vols: ");
+		for (Piste piste : orly.getPistesDecollage()) {
+			System.out.println(piste.getFileDAttente());
+		}
+
+		System.out.println("Entrer le numero du vol que vous voulez annuler:\n");
+				
+		boolean actionValidee = false;
+		while(!actionValidee) {
+			Scanner sc = new Scanner(System.in);
+					
+			if(sc.hasNextInt()) {
+				actionValidee = orly.annulerVol(sc.nextInt());	
+				System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");
+			} else if (sc.hasNext("exit")) {
+				break;
+			}
+		}
+				
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}	
 	
 	public static void DemandeAtterissage() {
 		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
