@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import com.gestion.aeroport.aeroport.Compagnie;
+import com.gestion.aeroport.aeroport.Program.Destination;
 
 public class Pilote extends Passager {
 	
@@ -32,7 +33,7 @@ public class Pilote extends Passager {
 	 * @param passagersMax
 	 * @param tempsPause
 	 */
-	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive, Compagnie employeur, int passagersMax, int tempsPause) {
+	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, Destination voyage, boolean volPrive, Compagnie employeur, int passagersMax, int tempsPause) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
 		this.employeur = employeur;
 		this.passagersMax = passagersMax;

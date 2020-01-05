@@ -1,12 +1,7 @@
 package com.gestion.aeroport.passager;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
-import com.gestion.aeroport.aeroport.Aeroport;
 import com.gestion.aeroport.aeroport.Program;
 import com.gestion.aeroport.aeroport.Program.Destination;
 
@@ -22,7 +17,7 @@ private String prenom;
 	private String nationalite;
 	private String numeroPasseport;
 	
-	private String voyage; 
+	private Destination voyage; 
 	private String historique = null; 
 	private float poidsBagage;
 	private int numeroVol = -1;
@@ -38,7 +33,7 @@ private String prenom;
 	 * @param numeroPasseport String
 	 * @param voyage String "depart->arriver;"
 	 */
-	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive) {
+	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, Destination voyage, boolean volPrive) {
 		this.prenom = prenom;
 		this.nom = nom;
 		this.anniversaire = anniversaire;
@@ -55,7 +50,7 @@ private String prenom;
 	 * Créer une personne aléatoire juste besoins de spécifier son voyage
 	 * @param voyage String "depart|arriver"
 	 */
-	public Passager (String voyage, boolean volPrive) {
+	public Passager (Destination voyage, boolean volPrive) {
 		this.nationalite = Program.randomNationalite();
 		
 		Fairy fairy = Fairy.create();
@@ -74,7 +69,7 @@ private String prenom;
 		
 	}
 	
-	public Passager(String voyage, boolean volPrive, String nationalite) {
+	public Passager(Destination voyage, boolean volPrive, String nationalite) {
 		this(voyage, volPrive);
 		this.nationalite = nationalite;
 	}
@@ -96,7 +91,7 @@ private String prenom;
 	 * Permet d'obtenir le voyage du passager
 	 * @return Le voyage du passager
 	 */
-	public String getVoyage() {
+	public Destination getVoyage() {
 		return voyage;
 	}
 
@@ -104,7 +99,7 @@ private String prenom;
 	 * Permet de modifier le voyage du passager
 	 * @param voyage String "depart|arriver"
 	 */
-	public void setVoyage(String voyage) {
+	public void setVoyage(Destination voyage) {
 		this.voyage = voyage;
 	}
 

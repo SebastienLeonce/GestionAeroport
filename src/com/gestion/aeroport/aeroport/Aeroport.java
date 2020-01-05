@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.gestion.aeroport.aeroport.Program.Destination;
 import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.avion.AvionDiplomatique;
 import com.gestion.aeroport.avion.AvionLigne;
@@ -46,7 +47,6 @@ public class Aeroport {
 	}
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
-		
 		
 		this.radar = new ArrayList<Vol>(); 
 		
@@ -194,7 +194,7 @@ public class Aeroport {
 					n =  maxPassagerAttente;
 				}			
 				for(int i = 0; i < n; i++) {
-					a.ajouterPassager(new Passager(dest.toString(), false));
+					a.ajouterPassager(new Passager(dest, false));
 				}
 				
 				Vol v = new Vol(a, dest.getAeroport(), this, c);
@@ -301,17 +301,17 @@ public class Aeroport {
 			//1 chance sur 100 que le passager souhaite prendre un vol privé
 			int r = 1 + (int)(Math.random() * ((100-1) + 1 ));
 			if(r == 1) {
-				Passager p = new Passager(d.toString(), true);
+				Passager p = new Passager(d, true);
 				this.getFileAttentePassagerPrive().get(d).add(p);
 				prive = true;
 			}
 			else if (r == 2){
-				Diplomate p = new Diplomate(d.toString(), 42, Program.randomNationalite());
+				Diplomate p = new Diplomate(d, 42, Program.randomNationalite());
 				this.getFileAttentePassagerDiplomatique().get(d).add(p);
 				diplomate = true;
 			}
 			else {
-				Passager p = new Passager(d.toString(), false);
+				Passager p = new Passager(d, false);
 				this.getFileAttentePassager().get(d).add(p);
 			}	
 		}
@@ -620,20 +620,64 @@ public class Aeroport {
 		for (Piste piste : getPistesDecollage()) {
 			for (Vol vol : piste.getFileDAttente()) {
 				if (vol.getNumeroDeVol() == id) {
-					listeOccupants = vol.getOccupants();
 					
-					for (Passager occupant : listeOccupants) {
-						this.getFileAttentePassager();
-						this.getFileAttentePassagerDiplomatique();
-						this.getFileAttentePassagerPrive();
-						this.getFileAttentePersonnel();
-						this.getFileAttentePilote();
-						////////////////////////////////////////////
+					Destination d = Destination.aeroportToDestination(vol.getArrivee());
+					if(d != null) {
+						listeOccupants = vol.getOccupants();
 						
-					}
+						Queue<Passager> nouvelleFilePassager = new LinkedList<Passager>();
+						Queue<Diplomate> nouvelleFileDiplomate = new LinkedList<Diplomate>();
+						Queue<Passager> nouvelleFilePassagerPrive = new LinkedList<Passager>();
+						
+						Queue<Personnel> nouvelleFilePersonnel = new LinkedList<Personnel>();
+						Queue<Pilote> nouvelleFilePilote = new LinkedList<Pilote>();
+						
+						for (Passager occupant : listeOccupants) {
+							if(occupant instanceof Pilote) {
+								nouvelleFilePilote.add((Pilote) occupant);
+							}
+							else if (occupant instanceof Personnel) {
+								nouvelleFilePersonnel.add((Personnel) occupant); 
+							}
+							else if (occupant instanceof Diplomate) {
+								nouvelleFileDiplomate.add((Diplomate) occupant);
+							}
+							else {
+								if(occupant.isVolPrive()) {
+									nouvelleFilePassagerPrive.add(occupant);
+								}
+								else {
+									nouvelleFilePassager.add(occupant);
+								}
+							}
+						}
+						
+						nouvelleFilePassager.addAll(this.getFileAttentePassager().get(d));
+						this.getFileAttentePassager().replace(d, nouvelleFilePassager);
+						
+						nouvelleFileDiplomate.addAll(this.getFileAttentePassagerDiplomatique().get(d));
+						this.getFileAttentePassagerDiplomatique().replace(d, nouvelleFileDiplomate);
+						
+						nouvelleFilePassagerPrive.addAll(this.getFileAttentePassagerPrive().get(d));
+						this.getFileAttentePassagerPrive().replace(d, nouvelleFilePassagerPrive);
+						
+						
+						
+						Compagnie c = vol.getCompagnie();
+						nouvelleFilePilote.addAll(this.getFileAttentePilote().get(c));
+						this.getFileAttentePilote().replace(c, nouvelleFilePilote);
+						
+						nouvelleFilePersonnel.addAll(this.getFileAttentePersonnel().get(c));
+						this.getFileAttentePersonnel().replace(c, nouvelleFilePersonnel);
+						
 					
-					//supprimer le vol
-					return true;
+						//supprimer le vol
+						piste.getFileDAttente().remove(vol);
+						return true;
+					}
+					else {
+						System.out.println("Une erreur c'est produite l'avion n'avait pas de destination");
+					}				
 				}
 			}
 		}

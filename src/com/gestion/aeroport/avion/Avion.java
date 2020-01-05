@@ -103,7 +103,7 @@ public abstract class Avion {
 				
 				
 				if (c.getNom().equals(Compagnie.NOM_COMPAGNIE_PRIVEE)) {
-					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, new Passager("null", true)));
+					avions.add(new AvionPrive(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, new Passager(null, true)));
 				} 
 				else if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE)){
 					avions.add(new AvionDiplomatique(data[0], capacite, poidsBagagesMax, volCarburant, consommationCarburant, nbPilotes, espacement, null));

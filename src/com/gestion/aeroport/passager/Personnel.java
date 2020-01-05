@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.gestion.aeroport.aeroport.Compagnie;
+import com.gestion.aeroport.aeroport.Program.Destination;
 
 public class Personnel extends Passager {
 	
@@ -19,7 +20,7 @@ public class Personnel extends Passager {
 	 * @param voyage
 	 * @param compagnie
 	 */
-	public Personnel(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive, Compagnie compagnie) {
+	public Personnel(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, Destination voyage, boolean volPrive, Compagnie compagnie) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
 		this.compagnie = compagnie;
 	}

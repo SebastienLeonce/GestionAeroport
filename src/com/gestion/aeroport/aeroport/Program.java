@@ -38,7 +38,13 @@ public class Program {
 	 */
 	public static ArrayList<Compagnie> compagnies;
 	public static ArrayList<Avion> avionEnVol;
-	public static Aeroport orly;
+	public static Aeroport orly = new Aeroport("Orly",
+				new ArrayList<Piste>(Arrays.asList(  //Atterrisage
+					new Piste(),
+					new Piste())), 
+				new ArrayList<Piste>(Arrays.asList(  //Decollage
+						new Piste(),
+						new Piste())));
 	public static ArrayList<Aeroport> autresAeroports;
 	public static boolean programRunning = true;
 	
@@ -48,7 +54,8 @@ public class Program {
         SINGAPOUR(new Aeroport("Singapour")),
         SIDNEY(new Aeroport("Sidney")),
         MOSCOU(new Aeroport("Moscou")),
-        BRATISLAVA(new Aeroport("Bratislava"));
+        BRATISLAVA(new Aeroport("Bratislava")),
+        ORLY(orly); //orly MUST be the LAST 
         
 		private Aeroport aeroport;
         private Destination(Aeroport d) {
@@ -61,11 +68,24 @@ public class Program {
 		private static final Random RANDOM = new Random();
 	
 		
+		public static Destination aeroportToDestination(Aeroport a) {
+			for(Destination d : VALUES) {
+				if(d.getAeroport().equals(a)) {
+					return d;
+				}
+			}
+			return null;
+		}
+		
 		public Aeroport getAeroport() {
 			return this.aeroport;
 		}
+		/**
+		 * Random Destination excepted ORLY
+		 * @return Destination
+		 */
 		public static Destination randomDestination()  {
-		    return VALUES.get(RANDOM.nextInt(SIZE));
+			return VALUES.get(RANDOM.nextInt(SIZE-1));
 		}        
         @Override
         public String toString(){
@@ -77,13 +97,7 @@ public class Program {
 	
 	public static void main (String[] args) throws IOException {
 				
-		orly = new Aeroport("Orly",
-				new ArrayList<Piste>(Arrays.asList(  //Atterrisage
-					new Piste(),
-					new Piste())), 
-				new ArrayList<Piste>(Arrays.asList(  //Decollage
-						new Piste(),
-						new Piste())));
+		
 		autresAeroports = new ArrayList<Aeroport>(Arrays.asList(
 				new Aeroport(Destination.LONDRES.toString()),
 				new Aeroport(Destination.NY.toString()),
@@ -379,7 +393,7 @@ public class Program {
 						int random = 1 + (int)(Math.random() * (((a.getCapaciteMax()-a.getCapacite())-1) + 1 ));
 						for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
 							 //Secret code is 42 don't tell anyone
-							ad.ajouterPassager(new Diplomate("Orly", 42, ad.getEtat())); 
+							ad.ajouterPassager(new Diplomate(Destination.ORLY, 42, ad.getEtat())); 
 						}					
 					}
 					break;
@@ -387,12 +401,12 @@ public class Program {
 					//Genere un nombre de passager entre 1 et le maximum de passager possible dans l'avion
 					int random = 1 + (int)(Math.random() * (((a.getCapaciteMax()-a.getCapacite())-1) + 1 ));
 					for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
-						a.ajouterPassager(new Passager("Orly", true));
+						a.ajouterPassager(new Passager(Destination.ORLY, true));
 					}
 					break;
 				default:
 					for(int j = a.getCapacite(); j < a.getCapaciteMax(); j++) {
-						a.ajouterPassager(new Passager("Orly", false));
+						a.ajouterPassager(new Passager(Destination.ORLY, false));
 					}
 					break;
 			}
