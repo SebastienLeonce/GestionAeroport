@@ -1,7 +1,9 @@
 package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
-
+/**
+ * Piste correspond à une file d'attente de vol
+ */
 public class Piste {
 
     private ArrayList<Vol> fileDAttente;

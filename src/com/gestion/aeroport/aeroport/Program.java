@@ -20,10 +20,13 @@ public class Program {
 
 	public static final int NB_COMPAGNIES = 5;
 	
+	
 	/**
 	 * Contains all nationalites
 	 */
 	public static ArrayList<String> allNationalites = new ArrayList<String>();
+	
+	
 	/**
 	 * retrun a random nationalite
 	 * @return String
@@ -33,11 +36,14 @@ public class Program {
 	}
 	
 	/**
+	 * Contiens toutes les compagnies
 	 * Compagnie Diplomatique index 0
 	 * Compagnie Privee index 1
 	 */
 	public static ArrayList<Compagnie> compagnies;
-	public static ArrayList<Avion> avionEnVol;
+	/**
+	 * Orly aeroport utilisé dans le Programme
+	 */
 	public static Aeroport orly = new Aeroport("Orly",
 				new ArrayList<Piste>(Arrays.asList(  //Atterrisage
 					new Piste(),
@@ -45,9 +51,24 @@ public class Program {
 				new ArrayList<Piste>(Arrays.asList(  //Decollage
 						new Piste(),
 						new Piste())));
+	
+	
+	/**
+	 * Contiens les autres aéroports ou il est possible d'aller
+	 */
 	public static ArrayList<Aeroport> autresAeroports;
+	
+	
+	/**
+	 * Tant que vrai, la simulation continue
+	 */
 	public static boolean programRunning = true;
 	
+	
+	/**
+	 * Ensemble des Aeroport présents dans le program
+	 * ORLY doit TOUJOURS être le dernier de l'enum
+	 */
 	public static enum Destination {
         LONDRES(new Aeroport("Londres")),
         NY(new Aeroport("New-York")), 
@@ -67,7 +88,11 @@ public class Program {
 		private static final int SIZE = VALUES.size();
 		private static final Random RANDOM = new Random();
 	
-		
+		/**
+		 * Retourne une destination à pertir d'un aeroport
+		 * @param Aeroport a
+		 * @return Destination si l'aeroport existe dans le program, null sinon
+		 */
 		public static Destination aeroportToDestination(Aeroport a) {
 			for(Destination d : VALUES) {
 				if(d.getAeroport().equals(a)) {
@@ -76,7 +101,10 @@ public class Program {
 			}
 			return null;
 		}
-		
+		/**
+		 * Retourne l'aeroport en lien avec la Destination
+		 * @return Aeroport
+		 */
 		public Aeroport getAeroport() {
 			return this.aeroport;
 		}
@@ -88,6 +116,9 @@ public class Program {
 			return VALUES.get(RANDOM.nextInt(SIZE-1));
 		}        
         @Override
+        /**
+         * Affiche le nom de la Destination
+         */
         public String toString(){
             return this.aeroport.getNom();
         }
@@ -97,7 +128,6 @@ public class Program {
 	
 	public static void main (String[] args) throws IOException {
 				
-		
 		autresAeroports = new ArrayList<Aeroport>(Arrays.asList(
 				new Aeroport(Destination.LONDRES.toString()),
 				new Aeroport(Destination.NY.toString()),
@@ -159,8 +189,7 @@ public class Program {
 				}
 			}
 			
-		}
-		avionEnVol = new ArrayList<Avion>();			
+		}	
 		
 		while(programRunning) {
 			//Repos des Pilotes
@@ -356,6 +385,12 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
+	
+	
+	/**
+	 * Créer un vol à destination et demande à attérir
+	 * Demande à l'utilisateur une piste où atterrir
+	 */
 	public static void DemandeAtterissage() {
 		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));
 		//Compagnie c = compagnies.get(0);
@@ -480,6 +515,11 @@ public class Program {
 		
 	}
 	
+	
+	/**
+	 * Demande à l'utilisateur une piste où décoller pour le vol
+	 * @param Vol v
+	 */
 	public static void DemandeDecollage(Vol v) {
 		orly.getRadar().add(v);
 		System.out.println("Le " + v + " a demande l'autorisation de decoller.");

@@ -6,6 +6,9 @@ import com.gestion.aeroport.avion.Avion;
 import com.gestion.aeroport.avion.AvionLigne;
 import com.gestion.aeroport.passager.Passager;
 
+/**
+ * Représente un Avion en avec ses occupants, un Aeroport de départ et un d'arrivée
+ */
 public class Vol {
 
     private static int compteur = 1;
@@ -53,7 +56,7 @@ public class Vol {
 
 	/**
      * Recupere tout les occupants du vol
-     * @return ArrayList<Passager
+     * @return ArrayList<Passager>
      */
     public ArrayList<Passager> getOccupants(){
     	Avion a = this.avion;
