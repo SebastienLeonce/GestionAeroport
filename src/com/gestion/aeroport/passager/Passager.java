@@ -36,7 +36,8 @@ private String prenom;
 	 * @param anniversaire Calendar
 	 * @param nationalite String
 	 * @param numeroPasseport String
-	 * @param voyage String "depart->arriver;"
+	 * @param voyage String 
+	 * @param volPrive boolean
 	 */
 	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, String voyage, boolean volPrive) {
 		this.prenom = prenom;
@@ -54,6 +55,7 @@ private String prenom;
 	/**
 	 * Créer une personne aléatoire juste besoins de spécifier son voyage
 	 * @param voyage String "depart|arriver"
+	 * @param volPrive boolean
 	 */
 	public Passager (String voyage, boolean volPrive) {
 		this.nationalite = Program.randomNationalite();
@@ -165,16 +167,16 @@ private String prenom;
 	}
 
 	/**
-	 * Obtenir la nationalité du passager
-	 * @return String La nationalité du passager
+	 * Obtenir la nationalite du passager
+	 * @return String La nationalite du passager
 	 */
 	public String getNationalite() {
 		return nationalite;
 	}
 
 	/**
-	 * Obtenir le numéro de passeport du passager
-	 * @return String Le numéro de passeport du passager
+	 * Obtenir le numero de passeport du passager
+	 * @return String Le numero de passeport du passager
 	 */
 	public String getNumeroPasseport() {
 		return numeroPasseport;
@@ -197,8 +199,8 @@ private String prenom;
 	}
 
 	/**
-	 * Permet d'afficher tous les données d'un passager en console
-	 * @return String Les données du passagers
+	 * Permet d'afficher tous les donnees d'un passager en console
+	 * @return String Les donnees du passagers
 	 */
 	@Override
 	public String toString() {
