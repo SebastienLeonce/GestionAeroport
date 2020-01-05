@@ -7,6 +7,9 @@ import java.util.Random;
 import com.gestion.aeroport.aeroport.Compagnie;
 import com.gestion.aeroport.aeroport.Program.Destination;
 
+/**
+ * Pilote herite de la classe Passager et représente un pilote d'une compagnie
+ */
 public class Pilote extends Passager {
 	
 	public static final int PASSAGERMAX_MIN = 200;
@@ -22,16 +25,17 @@ public class Pilote extends Passager {
 	private int cooldown;
 	
 	/**
-	 * 
-	 * @param prenom
-	 * @param nom
-	 * @param anniversaire
-	 * @param nationalite
-	 * @param numeroPasseport
-	 * @param voyage
-	 * @param employeur
-	 * @param passagersMax
-	 * @param tempsPause
+	 * Creer un pilote en specifiant tous les parametres
+	 * @param prenom String
+	 * @param nom String
+	 * @param anniversaire Calendar
+	 * @param nationalite String
+	 * @param numeroPasseport String
+	 * @param voyage Destination
+	 * @param volPrive boolean
+	 * @param employeur Compagnie
+	 * @param passagersMax int
+	 * @param tempsPause int
 	 */
 	public Pilote(String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, Destination voyage, boolean volPrive, Compagnie employeur, int passagersMax, int tempsPause) {
 		super(prenom, nom, anniversaire, nationalite, numeroPasseport, voyage, volPrive);
@@ -43,8 +47,9 @@ public class Pilote extends Passager {
 	}
 	
 	/**
-	 * 
-	 * @param employeur
+	 * Creer un pilote en specifiant : employeur et volPrive
+	 * @param employeur Compagnie
+	 * @param volPrive boolean
 	 */
 	public Pilote (Compagnie employeur, boolean volPrive) {
 		super(null, volPrive);
@@ -55,41 +60,49 @@ public class Pilote extends Passager {
 	}
 	
 	
-	
+	/**
+	 * Permet d'obtenir le temps de repos du pilote
+	 * @return int Temps de repos
+	 */
 	public int getCooldown() {
 		return cooldown;
 	}
 
+	/**
+	 * Permet de fixer le temp de repos du pilote
+	 * @param cooldown int
+	 */
 	public void setCooldown(int cooldown) {
 		this.cooldown = cooldown;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Permet d'obtenir la compagnie du pilote
+	 * @return Compagnie
 	 */
 	public Compagnie getEmployeur() {
 		return employeur;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Permet d'obtenir le nombre de passager max du pilote
+	 * @return int
 	 */
 	public int getPassagersMax() {
 		return passagersMax;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Permet d'obtenir le temps de pause du pilote
+	 * @return int
 	 */
 	public int getTempsPause() {
 		return tempsPause;
 	}
 
 	/**
-	 * 
+	 * Permet d'afficher un pilote
+	 * @return String
 	 */
 	@Override
 	public String toString() {
@@ -99,6 +112,12 @@ public class Pilote extends Passager {
 				"\ttempsPause      = " + tempsPause;
 	}
 	
+	/**
+	 * Permet de generer n pilotes 
+	 * @param n int Le nombre de pilotes a generer
+	 * @param c Compagnie Permet de determiner si c'est une compagnie prive ou non
+	 * @return ArrayList(Pilote) pilotes
+	 */
 	public static ArrayList<Pilote> generate(int n, Compagnie c){
 		ArrayList<Pilote> pilotes = new ArrayList<Pilote>();
 		for (int i = 0 ; i < n ; i++) {

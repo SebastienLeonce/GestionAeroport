@@ -9,6 +9,10 @@ import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
 import io.codearte.jfairy.producer.person.PersonProperties;
 
+
+/**
+ * Passager est la classe representant un individu dans l'aeroport
+ */
 public class Passager {
 	
 private String prenom;
@@ -25,14 +29,14 @@ private String prenom;
 	private boolean volPrive;
 	
 	/**
-	 * Créer une personne en spécifiant sois même tous les paramètres
+	 * Creer un passager en specifiant tous les parametres
 	 * @param prenom String
 	 * @param nom String
 	 * @param anniversaire Calendar
 	 * @param nationalite String
 	 * @param numeroPasseport String
-	 * @param voyage String 
-	 * @param volPrive boolean
+	 * @param voyage Destination 
+	 * @param volPrive boolean : Permet de definir si le passager vol dans un avion prive
 	 */
 	public Passager (String prenom, String nom, Calendar anniversaire, String nationalite, String numeroPasseport, Destination voyage, boolean volPrive) {
 		this.prenom = prenom;
@@ -48,9 +52,9 @@ private String prenom;
 	}
 	
 	/**
-	 * Créer une personne aléatoire juste besoins de spécifier son voyage
-	 * @param voyage String "depart|arriver"
-	 * @param volPrive boolean
+	 * Creer un passager aleatoire juste besoin de specifier son voyage et s'il recherche un vol prive ou non
+	 * @param voyage Destination 
+	 * @param volPrive boolean : Permet de definir si le passager vol dans un avion prive
 	 */
 	public Passager (Destination voyage, boolean volPrive) {
 		this.nationalite = Program.randomNationalite();
@@ -71,20 +75,38 @@ private String prenom;
 		
 	}
 	
+	/**
+	 *  Creer un passager aleatoire en sp�cifiant : voyage, volPrive et nationalite
+	 * @param voyage Destination 
+	 * @param volPrive boolean : Permet de definir si le passager vol dans un avion prive
+	 * @param nationalite String
+	 */
 	public Passager(Destination voyage, boolean volPrive, String nationalite) {
 		this(voyage, volPrive);
 		this.nationalite = nationalite;
 	}
 	
 
-	
+	/**
+	 * Renvoie le poids des bagages du passager
+	 * @return float Le poids des bagages
+	 */
 	public float getPoidsBagage() {
 		return poidsBagage;
 	}
+	
+	/**
+	 * Permet de d�finir si le passager prend un vol prive
+	 * @param volPrive boolean
+	 */
 	public void setVolPrive(boolean volPrive) {
 		this.volPrive = volPrive;
 	}
 
+	/**
+	 * Permet de savoir si le passager prend un vol prive
+	 * @return boolean
+	 */
 	public boolean isVolPrive() {
 		return volPrive;
 	}
@@ -99,7 +121,7 @@ private String prenom;
 
 	/**
 	 * Permet de modifier le voyage du passager
-	 * @param voyage String "depart|arriver"
+	 * @param voyage Destination
 	 */
 	public void setVoyage(Destination voyage) {
 		this.voyage = voyage;
@@ -114,7 +136,7 @@ private String prenom;
 	}
 
 	/**
-	 * Permet de mettre à jour l'historique des voyages du passager
+	 * Permet de mettre a jour l'historique des voyages du passager
 	 * @param historique String
 	 */
 	public void setHistorique(String historique) {
@@ -122,15 +144,15 @@ private String prenom;
 	}
 
 	/**
-	 * Permet d'obtenir le numéro de vol du passager
-	 * @return int Le numéro de vol du passager
+	 * Permet d'obtenir le numero de vol du passager
+	 * @return int Le numero de vol du passager
 	 */
 	public int getNumeroVol() {
 		return numeroVol;
 	}
 
 	/**
-	 * Permet de mettre à jour le numéro de vol du passager
+	 * Permet de mettre a� jour le numero de vol du passager
 	 * @param numeroVol int
 	 */
 	public void setNumeroVol(int numeroVol) {
@@ -138,8 +160,8 @@ private String prenom;
 	}
 
 	/**
-	 * Obtenir le prénom du passager
-	 * @return String Le prénom du passager
+	 * Obtenir le prenom du passager
+	 * @return String Le prenom du passager
 	 */
 	public String getPrenom() {
 		return prenom;
