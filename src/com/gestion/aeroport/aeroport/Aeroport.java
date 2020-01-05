@@ -564,6 +564,7 @@ public class Aeroport {
 		
 		return false;
 	}
+	
 	public boolean annulerVol(int id) {
 		ArrayList<Passager> listeOccupants;
 
@@ -583,6 +584,19 @@ public class Aeroport {
 					}
 					
 					//supprimer le vol
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean prioriteVol(int id) {
+		
+		for (Piste piste : getPistesDecollage()) {
+			for (Vol vol : piste.getFileDAttente()) {
+				if (vol.getNumeroDeVol() == id) {
 					return true;
 				}
 			}
