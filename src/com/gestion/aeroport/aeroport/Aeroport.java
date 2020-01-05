@@ -579,8 +579,10 @@ public class Aeroport {
 						this.getFileAttentePersonnel();
 						this.getFileAttentePilote();
 						////////////////////////////////////////////
+						
 					}
 					
+					//supprimer le vol
 					return true;
 				}
 			}
