@@ -299,6 +299,7 @@ public class Program {
 		Avion a = null;
 		try {
 			a = c.utiliserUnAvion();
+			
 			//Recherches de pilotes de la même nationalité pour la compagnie diplomatique
 			if(c.getNom().equals(Compagnie.NOM_COMPAGNIE_DIPLOMATIQUE)) {
 				AvionDiplomatique ad = (AvionDiplomatique)a;
@@ -324,6 +325,7 @@ public class Program {
 					a = null;
 				}
 			}
+			
 			else {
 				ArrayList<Pilote> pilotes = c.utiliserDesPilotes(a.getNbPilotesMin());
 				for(Pilote p: pilotes) {

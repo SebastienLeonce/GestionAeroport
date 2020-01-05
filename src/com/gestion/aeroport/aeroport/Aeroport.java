@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.gestion.aeroport.avion.Avion;
+import com.gestion.aeroport.avion.AvionDiplomatique;
 import com.gestion.aeroport.avion.AvionLigne;
 import com.gestion.aeroport.avion.AvionPrive;
 import com.gestion.aeroport.passager.Diplomate;
@@ -234,6 +235,55 @@ public class Aeroport {
 	}
 	public void generateVolDiplomatique() {
 		System.out.println("=========Preparation d'un Vol Diplomatique==========");
+		Compagnie c = Program.compagnies.get(0);
+		for(Program.Destination d : Program.Destination.values()) {
+			if(this.fileAttentePassagerDiplomatique.get(d).size() > 0) {
+				for(Diplomate diplomate : this.fileAttentePassagerDiplomatique.get(d)) {
+					if(this.avionsAuSol.get(c).size() > 0) {
+						//Recherches de pilotes de la même nationalité pour la compagnie diplomatique
+						AvionDiplomatique ad = (AvionDiplomatique)this.getAvionsAuSol().get(c).get(0);
+						String etat = diplomate.getNationalite();
+						ad.setEtat(etat);
+						int compt = 0;
+						for(int i = 1; i < Program.compagnies.size(); i++) {
+							if(compt >= ad.getNbPilotesMin()) {
+								break;
+							}
+							Iterator<Pilote> iterator = Program.compagnies.get(i).getPilotesDispo().iterator();
+							while(iterator.hasNext() && compt < ad.getNbPilotesMin()) {
+								Pilote p = iterator.next();
+								if(p.getNationalite().equals(etat)) {
+									iterator.remove();
+									Program.compagnies.get(i).getPilotesUtilise().add(p);
+									ad.ajouterPilote(p);
+									compt++;
+								}
+							}		
+						}
+						if(compt < ad.getNbPilotesMin()) {
+							System.out.println("En attente de " + (ad.getNbPilotesMin() - compt) + " pilote(s) disponible(s) de nationalite " + etat + " pour un vol diplomatique à destination de " + d.toString());
+							Iterator<Pilote> iterator = ad.getPilotes().iterator();
+							while(iterator.hasNext()) {
+								Pilote p = iterator.next();
+								p.getEmployeur().setUtilisable(p);
+								iterator.remove();
+							}
+						}
+						else {
+							for(int i = 0; i <= this.fileAttentePassagerDiplomatique.get(d).size(); i++) {
+								ad.ajouterPassager(this.fileAttentePassagerDiplomatique.get(d).remove());
+							}
+							this.avionsAuSol.get(c).remove(ad);
+							Vol v = new Vol(ad, d.getAeroport(), this, c);
+							Program.DemandeDecollage(v);
+						}
+					}
+					else {
+						System.out.println("En attente d'un avion disponible pour un vol diplomatique à destination de " + d.toString());
+					}
+				}
+			}
+		}		
 	}
 	
 	
