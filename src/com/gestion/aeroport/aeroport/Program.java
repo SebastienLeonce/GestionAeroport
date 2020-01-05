@@ -90,7 +90,7 @@ public class Program {
 	
 		/**
 		 * Retourne une destination à pertir d'un aeroport
-		 * @param Aeroport a
+		 * @param a Aeroport 
 		 * @return Destination si l'aeroport existe dans le program, null sinon
 		 */
 		public static Destination aeroportToDestination(Aeroport a) {
@@ -283,7 +283,9 @@ public class Program {
 		}
 	}
 	
-	//Fermeture temporaire d'une piste
+	/**
+	 * Fermeture temporaire d'une piste puis repartition de sa file d'attente avec les autres pistes ouverte
+	 */
 	private static void fermeturePiste () {
 		System.out.println("pisteAtterrissage");
 		System.out.println(orly.getPistesAtterrissage());
@@ -309,7 +311,9 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
-	//Ouverture d'une piste
+	/**
+	 * Ouverture d'une piste puis reconstruction de sa file d'attente avec celle des autres pistes ouverte
+	 */
 	private static void reouverturePiste () {
 		System.out.println("pisteAtterrissage");
 		System.out.println(orly.getPistesAtterrissage());
@@ -335,7 +339,9 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
-	//Annulation vol
+	/**
+	 * Annulation d'un vol et renvoie des passagers au début de leur file d'attente
+	 */
 	private static void annulationVol () {
 		System.out.println("Liste des vols: ");
 		for (Piste piste : orly.getPistesDecollage()) {
@@ -360,7 +366,9 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
-	//Passage en priorite vol
+	/**
+	 * Passage en premiere position sur la piste de decollage, un avion ne peux pas pas depasser un avion diplomatique s'il n'en est pas un
+	 */
 	private static void VolEnPriorite () {
 		System.out.println("Liste des vols: ");
 		for (Piste piste : orly.getPistesDecollage()) {
@@ -518,7 +526,7 @@ public class Program {
 	
 	/**
 	 * Demande à l'utilisateur une piste où décoller pour le vol
-	 * @param Vol v
+	 * @param v Vol
 	 */
 	public static void DemandeDecollage(Vol v) {
 		orly.getRadar().add(v);

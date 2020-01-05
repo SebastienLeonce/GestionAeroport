@@ -123,7 +123,7 @@ public class Compagnie {
 	/**
 	 * Retourne une liste de pilote de la liste disponible et le met dans la liste en cours d'utilisation 
 	 * @param nb nombre de pilote a utiliser
-	 * @return ArrayList<Pilote>
+	 * @return ArrayList(Pilote)
 	 * @throws Exception if compagnie n'a pas assez de pilotes disponibles
 	 */
 	public ArrayList<Pilote> utiliserDesPilotes(int nb) throws Exception{
@@ -161,7 +161,7 @@ public class Compagnie {
 	/**
 	 * Retourne une liste de Personnels de la liste disponible et le met dans la liste en cours d'utilisation 
 	 * @param nb nombre de Personnels a utiliser
-	 * @return ArrayList<Personnels>
+	 * @return ArrayList(Personnels)
 	 * @throws Exception if compagnie n'a pas assez de Personnels disponibles
 	 */
 	public ArrayList<Personnel> utiliserDuPersonnel(int nb) throws Exception{
@@ -179,7 +179,7 @@ public class Compagnie {
 	
 	/**
 	 * Utilise un pilote en particulier 
-	 * @param Pilote doit appartenir à la compagnie
+	 * @param o Pilote doit appartenir à la compagnie
 	 */
 	public void setUtilise(Pilote o) {
 		if(this.pilotesDispo.contains(o)) {
@@ -194,7 +194,7 @@ public class Compagnie {
 	
 	/**
 	 * Rend l'objet o utilisable en le mettant dans la liste dispo
-	 * @param Avion, doit appartenir à la compagnie
+	 * @param o Avion, doit appartenir à la compagnie
 	 */
 	public void setUtilisable(Avion o) {
 		if(this.flotteUtilise.contains(o)) {
@@ -207,7 +207,7 @@ public class Compagnie {
 	}
 	/**
 	 * Rend l'objet o utilisable en le mettant dans la liste dispo
-	 * @param Pilote, doit appartenir à la compagnie
+	 * @param o Pilote, doit appartenir à la compagnie
 	 */
 	public void setUtilisable(Pilote o) {
 		if(this.pilotesUtilise.contains(o)) {
@@ -220,7 +220,7 @@ public class Compagnie {
 	}
 	/**
 	 * Rend l'objet o utilisable en le mettant dans la liste dispo
-	 * @param Pilote, doit appartenir à la compagnie
+	 * @param o Pilote, doit appartenir à la compagnie
 	 */
 	public void setUtilisable(Personnel o) {
 		if(this.personnelsUtilise.contains(o)) {
@@ -235,8 +235,8 @@ public class Compagnie {
 	
 	/**
 	 * Genere un nombre de compagnie via le fichier de données en ligne
-	 * @param int n nombre de compagnie créer 
-	 * @return ArrayList<Compagnie>
+	 * @param n int nombre de compagnie créer 
+	 * @return ArrayList(Compagnie)
 	 * @throws IOException si le fichier n'est pas accessible
 	 */
 	public static ArrayList<Compagnie> generate(int n) throws IOException {
@@ -299,7 +299,7 @@ public class Compagnie {
 	}
 
 	/**
-	 * Retoune le nom de la CompagnieS
+	 * Retoune le nom de la Compagnie
 	 * @return String
 	 */
 	public String getNom() {
@@ -307,7 +307,7 @@ public class Compagnie {
 	}
 	/**
 	 * Retourne les avions disponible (non utilisés dans le programme)
-	 * @return ArrayList<Avion>
+	 * @return ArrayList(Avion)
 	 */
 	public ArrayList<Avion> getFlotteDispo() {
 		return flotteDispo;
@@ -319,7 +319,7 @@ public class Compagnie {
 
 	/**
 	 * Retourne les avions utilisés dans le programme
-	 * @return ArrayList<Avion>
+	 * @return ArrayList(Avion)
 	 */
 	public ArrayList<Avion> getFlotteUtilise() {
 		return flotteUtilise;
@@ -331,7 +331,7 @@ public class Compagnie {
 
 	/**
 	 * Retourne les pilotes disponible (non utilisés dans le programme)
-	 * @return ArrayList<Pilote>
+	 * @return ArrayList(Pilote)
 	 */
 	public ArrayList<Pilote> getPilotesDispo() {
 		return pilotesDispo;
@@ -343,7 +343,7 @@ public class Compagnie {
 
 	/**
 	 * Retourne les pilotes utilisés dans le programme
-	 * @return ArrayList<Pilote>
+	 * @return ArrayList(Pilote)
 	 */
 	public ArrayList<Pilote> getPilotesUtilise() {
 		return pilotesUtilise;
@@ -355,7 +355,7 @@ public class Compagnie {
 
 	/**
 	 * Retourne le personnel disponnible (non utilisés dans le programme)
-	 * @return ArrayList<Personnel>
+	 * @return ArrayList(Personnel)
 	 */
 	public ArrayList<Personnel> getPersonnelsDispo() {
 		return personnelsDispo;
@@ -363,7 +363,7 @@ public class Compagnie {
 
 	/**
 	 * Retourne le personnel utilisés dans le programme
-	 * @return ArrayList<Personnel>
+	 * @return ArrayList(Personnel)
 	 */
 	private void setPersonnelsDispo(ArrayList<Personnel> personnelsDispo) {
 		this.personnelsDispo = personnelsDispo;

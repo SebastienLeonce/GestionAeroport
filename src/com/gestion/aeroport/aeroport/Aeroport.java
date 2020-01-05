@@ -46,16 +46,16 @@ public class Aeroport {
 	
 	/**
 	 * Créer un aeroport avec uniquement un nom. Utile pour les autres destination
-	 * @param String nom 
+	 * @param nom String  
 	 */
 	public Aeroport(String nom) {
 		this.nom = nom;
 	}
 	/**
 	 * Créer un aeroport complet, Utile pour ORLY
-	 * @param String nom
-	 * @param ArrayList<Piste> pistesAtterrissage
-	 * @param ArrayList<Piste> pistesDecollage
+	 * @param nom String 
+	 * @param pistesAtterrissage ArrayList(Piste) 
+	 * @param pistesDecollage ArrayList(Piste) 
 	 */
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
@@ -82,7 +82,7 @@ public class Aeroport {
 	}
 	/**
 	 * Retourne la file d'attente des passagers pour des vols privés, classés par Destination
-	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 * @return HashMap(Program.Destination, Queue(Passager))
 	 */
 	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassagerPrive() {
 		return fileAttentePassagerPrive;
@@ -90,7 +90,7 @@ public class Aeroport {
 	
 	/**
 	 * Retourne la file d'attente des diplomate pour des vols diplomatique, classés par Destination
-	 * @return HashMap<Program.Destination, Queue<Diplomate>>
+	 * @return HashMap(Program.Destination, Queue(Diplomate))
 	 */
 	public HashMap<Program.Destination, Queue<Diplomate>> getFileAttentePassagerDiplomatique() {
 		return fileAttentePassagerDiplomatique;
@@ -98,7 +98,7 @@ public class Aeroport {
 	
 	/**
 	 * Retourne la file d'attente des personnel pour des vols public, classés par Compagnie
-	 * @return HashMap<Compagnie, Queue<Personnel>>
+	 * @return HashMap(Compagnie, Queue(Personnel))
 	 */
 	public HashMap<Compagnie, Queue<Personnel>> getFileAttentePersonnel() {
 		return fileAttentePersonnel;
@@ -106,35 +106,35 @@ public class Aeroport {
 	
 	/**
 	 * Retourne la file d'attente des passagers pour des vols public, classés par Destination
-	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 * @return HashMap(Program.Destination, Queue(Passager))
 	 */
 	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassager() {
 		return fileAttentePassager;
 	}
 	/**
 	 * Retourne les avions au sol, classés par Destination
-	 * @return HashMap<Compagnie, ArrayList<Avion>>
+	 * @return HashMap(Compagnie, ArrayList(Avion))
 	 */
 	public HashMap<Compagnie, ArrayList<Avion>> getAvionsAuSol() {
 		return avionsAuSol;
 	}
 	/**
 	 * Retourne la file d'attente des pilotes pour tout type de vol, classés par Compagnie
-	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 * @return HashMap(Program.Destination, Queue(Passager))
 	 */
 	public HashMap<Compagnie, Queue<Pilote>> getFileAttentePilote() {
 		return fileAttentePilote;
 	}
 	/**
 	 * Retourne toutes les pistes de décollage
-	 * @return ArrayList<Piste>
+	 * @return ArrayList(Piste)
 	 */
 	public ArrayList<Piste> getPistesDecollage() {
 		return pistesDecollage;
 	}
 	/**
 	 * Retourne toutes les pistes d'atterrisage
-	 * @return ArrayList<Piste>
+	 * @return ArrayList(Piste)
 	 */
 	public ArrayList<Piste> getPistesAtterrissage() {
 		return pistesAtterrissage;
@@ -148,7 +148,7 @@ public class Aeroport {
 	}
 	/**
 	 * Retourne les vol actuellement autour de l'aéroport
-	 * @return ArrayList<Vol>
+	 * @return ArrayList(Vol)
 	 */
 	public ArrayList<Vol> getRadar() {
 		return radar;
@@ -327,7 +327,6 @@ public class Aeroport {
 	
 	/**
 	 * Creer de nouveaux passagers dans l'aeroport avec une destination random
-	 * @return nombre de passager crï¿½ï¿½
 	 */
 	public void ArriveePassagerDansAeroport() {
 		int random = MIN_ARRIVEE_PASSAGER + (int)(Math.random() * ((MAX_ARRIVEE_PASSAGER-MIN_ARRIVEE_PASSAGER) + MIN_ARRIVEE_PASSAGER ));
@@ -478,7 +477,10 @@ public class Aeroport {
 	
 	
 	/**
-	 * Calcul et insï¿½re un vol sur une piste en foction de son carburant
+	 * Calcul et insere un vol sur une piste en fonction de son carburant
+	 * @param p Piste
+	 * @param v Vol
+	 * @return int La position du vol
 	 */
 	public static int calculPosition(Piste p, Vol v) {
 		int position = p.getFileDAttente().size();
@@ -492,7 +494,11 @@ public class Aeroport {
 		return position;
 	}
 	
-	
+	/**
+	 * Fermeture d'une piste de l'aeroport puis repartition de sa file d'attente avec les pistes ouvertes
+	 * @param id numero de piste
+	 * @return boolean si l'action a marche ou non
+	 */
 	public boolean eteindrePiste(int id) {
 		int enMarche = 0;
 		Piste piste = null;
@@ -571,7 +577,11 @@ public class Aeroport {
 		return false;
 	}
 	
-	
+	/**
+	 * Ouverture d'une piste qui était ferme et reconstruction de sa file d'attente
+	 * @param id numero de piste
+	 * @return boolean si l'action a marche ou non
+	 */
 	public boolean ouvrirPiste(int id) {
 		Piste piste = null;
 		int moyenne = 0;
@@ -656,6 +666,11 @@ public class Aeroport {
 		return false;
 	}
 	
+	/**
+	 * Annulation d'un vol et renvoie des passager en tête de la file d'attente
+	 * @param id numero de vol
+	 * @return boolean si l'action a marche ou non
+	 */
 	public boolean annulerVol(int id) {
 		ArrayList<Passager> listeOccupants;
 
@@ -727,6 +742,11 @@ public class Aeroport {
 		return false;
 	}
 	
+	/**
+	 * Passage en premiere position sur la piste de decollage, un avion ne peux pas pas depasser un avion diplomatique s'il n'en est pas un 
+	 * @param id numero de vol
+	 * @return boolean si l'action a marche ou non
+	 */
 	public boolean prioriteVol(int id) {
 		
 		Piste pisteID = null;

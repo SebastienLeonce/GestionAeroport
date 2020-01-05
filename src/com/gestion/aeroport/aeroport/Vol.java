@@ -56,7 +56,7 @@ public class Vol {
 
 	/**
      * Recupere tout les occupants du vol
-     * @return ArrayList<Passager>
+     * @return ArrayList(Passager)
      */
     public ArrayList<Passager> getOccupants(){
     	Avion a = this.avion;
