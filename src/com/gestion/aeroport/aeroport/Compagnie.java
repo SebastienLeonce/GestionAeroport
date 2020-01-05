@@ -17,17 +17,43 @@ import com.gestion.aeroport.passager.Pilote;
  * Afin de faciliter l'utilisation des Compagnies,
  * les vols privés sont considérés comme de la Compagnie 'Private Flight' (déjà présente dans notre fichier de compagnies)
  * les vols diplomatiques sont considérés comme de la Compagnie 'Diplomatic Filght' (que nous avons créée)
+ * 
+ * Les Compagnie sont générées au début du programme et ne changent pas après.
+ * De nouveaux pilotes ou avions ou personnels NE peuvent PAS être créer
  */
 public class Compagnie {
-	
+	/**
+	 * Nombre de pilote mininmum crée dans une compagnie
+	 */
 	public static final int PILOTE_MIN = 50;
+	/**
+	 * Nombre de pilote maximum crée dans une compagnie
+	 */
 	public static final int PILOTE_MAX = 150;
+	/**
+	 * Nombre de personnel mininmum crée dans une compagnie
+	 */
 	public static final int PERSONNEL_MIN = 200;
+	/**
+	 * Nombre de personnel maximum crée dans une compagnie
+	 */
 	public static final int PERSONNEL_MAX = 300;
+	/**
+	 * Nombre d'avion mininmum crée dans une compagnie
+	 */
 	public static final int AVION_MIN = 10;
+	/**
+	 * Nombre d'avion maximum crée dans une compagnie
+	 */
 	public static final int AVION_MAX = 50;	
 	
+	/**
+	 * Les vols privé sont repésentés comme affectés à la compagnie privée
+	 */
 	public static final String NOM_COMPAGNIE_PRIVEE = "\"Private flight\"";
+	/**
+	 * Les vols diplomatique sont repésentés comme affectés à la compagnie diplomatique
+	 */
 	public static final String NOM_COMPAGNIE_DIPLOMATIQUE = "\"Diplomatic Flight\"";
 	
 	private String nom;
@@ -207,7 +233,12 @@ public class Compagnie {
 	}
 	
 	
-	
+	/**
+	 * Genere un nombre de compagnie via le fichier de données en ligne
+	 * @param int n nombre de compagnie créer 
+	 * @return ArrayList<Compagnie>
+	 * @throws IOException si le fichier n'est pas accessible
+	 */
 	public static ArrayList<Compagnie> generate(int n) throws IOException {
 		URL url = new URL("https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat");
 		ArrayList<Compagnie> compagnies = new ArrayList<Compagnie>();
@@ -267,48 +298,74 @@ public class Compagnie {
 				"}";
 	}
 
-
+	/**
+	 * Retoune le nom de la CompagnieS
+	 * @return String
+	 */
 	public String getNom() {
 		return nom;
 	}
-
+	/**
+	 * Retourne les avions disponible (non utilisés dans le programme)
+	 * @return ArrayList<Avion>
+	 */
 	public ArrayList<Avion> getFlotteDispo() {
 		return flotteDispo;
 	}
 
-	public void setFlotteDispo(ArrayList<Avion> flotteDispo) {
+	private void setFlotteDispo(ArrayList<Avion> flotteDispo) {
 		this.flotteDispo = flotteDispo;
 	}
 
+	/**
+	 * Retourne les avions utilisés dans le programme
+	 * @return ArrayList<Avion>
+	 */
 	public ArrayList<Avion> getFlotteUtilise() {
 		return flotteUtilise;
 	}
 
-	public void setFlotteUtilise(ArrayList<Avion> flotteUtilise) {
+	private void setFlotteUtilise(ArrayList<Avion> flotteUtilise) {
 		this.flotteUtilise = flotteUtilise;
 	}
 
+	/**
+	 * Retourne les pilotes disponible (non utilisés dans le programme)
+	 * @return ArrayList<Pilote>
+	 */
 	public ArrayList<Pilote> getPilotesDispo() {
 		return pilotesDispo;
 	}
 
-	public void setPilotesDispo(ArrayList<Pilote> pilotesDispo) {
+	private void setPilotesDispo(ArrayList<Pilote> pilotesDispo) {
 		this.pilotesDispo = pilotesDispo;
 	}
 
+	/**
+	 * Retourne les pilotes utilisés dans le programme
+	 * @return ArrayList<Pilote>
+	 */
 	public ArrayList<Pilote> getPilotesUtilise() {
 		return pilotesUtilise;
 	}
 
-	public void setPilotesUtilise(ArrayList<Pilote> pilotesUtilise) {
+	private void setPilotesUtilise(ArrayList<Pilote> pilotesUtilise) {
 		this.pilotesUtilise = pilotesUtilise;
 	}
 
+	/**
+	 * Retourne le personnel disponnible (non utilisés dans le programme)
+	 * @return ArrayList<Personnel>
+	 */
 	public ArrayList<Personnel> getPersonnelsDispo() {
 		return personnelsDispo;
 	}
 
-	public void setPersonnelsDispo(ArrayList<Personnel> personnelsDispo) {
+	/**
+	 * Retourne le personnel utilisés dans le programme
+	 * @return ArrayList<Personnel>
+	 */
+	private void setPersonnelsDispo(ArrayList<Personnel> personnelsDispo) {
 		this.personnelsDispo = personnelsDispo;
 	}
 
@@ -316,7 +373,7 @@ public class Compagnie {
 		return personnelsUtilise;
 	}
 
-	public void setPersonnelsUtilise(ArrayList<Personnel> personnelsUtilise) {
+	private void setPersonnelsUtilise(ArrayList<Personnel> personnelsUtilise) {
 		this.personnelsUtilise = personnelsUtilise;
 	}
 }

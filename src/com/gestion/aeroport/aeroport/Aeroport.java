@@ -17,7 +17,9 @@ import com.gestion.aeroport.passager.Passager;
 import com.gestion.aeroport.passager.Personnel;
 import com.gestion.aeroport.passager.Pilote;
 
-
+/**
+ * Aeroport contiens les pistes de décollage et d'atterrissage, les files d'attentes, et les avions sur le tarmac
+ */
 public class Aeroport {
 
 	private static final int  MIN_ARRIVEE_PASSAGER = 100;
@@ -42,10 +44,19 @@ public class Aeroport {
 	private ArrayList<Pilote> reposPilote;
 	
 	
-	
+	/**
+	 * Créer un aeroport avec uniquement un nom. Utile pour les autres destination
+	 * @param String nom 
+	 */
 	public Aeroport(String nom) {
 		this.nom = nom;
 	}
+	/**
+	 * Créer un aeroport complet, Utile pour ORLY
+	 * @param String nom
+	 * @param ArrayList<Piste> pistesAtterrissage
+	 * @param ArrayList<Piste> pistesDecollage
+	 */
 	public Aeroport(String nom, ArrayList<Piste> pistesAtterrissage, ArrayList<Piste> pistesDecollage) {
 		this.nom = nom;
 		
@@ -69,58 +80,78 @@ public class Aeroport {
 		}
 		
 	}
-	
-	
+	/**
+	 * Retourne la file d'attente des passagers pour des vols privés, classés par Destination
+	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 */
 	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassagerPrive() {
 		return fileAttentePassagerPrive;
 	}
+	
+	/**
+	 * Retourne la file d'attente des diplomate pour des vols diplomatique, classés par Destination
+	 * @return HashMap<Program.Destination, Queue<Diplomate>>
+	 */
 	public HashMap<Program.Destination, Queue<Diplomate>> getFileAttentePassagerDiplomatique() {
 		return fileAttentePassagerDiplomatique;
 	}
+	
+	/**
+	 * Retourne la file d'attente des personnel pour des vols public, classés par Compagnie
+	 * @return HashMap<Compagnie, Queue<Personnel>>
+	 */
 	public HashMap<Compagnie, Queue<Personnel>> getFileAttentePersonnel() {
 		return fileAttentePersonnel;
 	}
+	
+	/**
+	 * Retourne la file d'attente des passagers pour des vols public, classés par Destination
+	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 */
 	public HashMap<Program.Destination, Queue<Passager>> getFileAttentePassager() {
 		return fileAttentePassager;
 	}
-	public void setFileAttentePassager(HashMap<Program.Destination, Queue<Passager>> fileAttentePassager) {
-		this.fileAttentePassager = fileAttentePassager;
-	}
+	/**
+	 * Retourne les avions au sol, classés par Destination
+	 * @return HashMap<Compagnie, ArrayList<Avion>>
+	 */
 	public HashMap<Compagnie, ArrayList<Avion>> getAvionsAuSol() {
 		return avionsAuSol;
 	}
-	public void setAvionsAuSol(HashMap<Compagnie, ArrayList<Avion>> avionsAuSol) {
-		this.avionsAuSol = avionsAuSol;
-	}
+	/**
+	 * Retourne la file d'attente des pilotes pour tout type de vol, classés par Compagnie
+	 * @return HashMap<Program.Destination, Queue<Passager>>
+	 */
 	public HashMap<Compagnie, Queue<Pilote>> getFileAttentePilote() {
 		return fileAttentePilote;
 	}
-	public void setFileAttentePilote(HashMap<Compagnie, Queue<Pilote>> fileAttentePilote) {
-		this.fileAttentePilote = fileAttentePilote;
-	}
+	/**
+	 * Retourne toutes les pistes de décollage
+	 * @return ArrayList<Piste>
+	 */
 	public ArrayList<Piste> getPistesDecollage() {
 		return pistesDecollage;
 	}
-	public void setPistesDecollage(ArrayList<Piste> pistesDecollage) {
-		this.pistesDecollage = pistesDecollage;
-	}
+	/**
+	 * Retourne toutes les pistes d'atterrisage
+	 * @return ArrayList<Piste>
+	 */
 	public ArrayList<Piste> getPistesAtterrissage() {
 		return pistesAtterrissage;
 	}
-	public void setPistesAtterrissage(ArrayList<Piste> pistesAtterrissage) {
-		this.pistesAtterrissage = pistesAtterrissage;
-	}
+	/**
+	 * Retourne le nom de l'aéroport
+	 * @return String
+	 */
 	public String getNom() {
 		return nom;
 	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+	/**
+	 * Retourne les vol actuellement autour de l'aéroport
+	 * @return ArrayList<Vol>
+	 */
 	public ArrayList<Vol> getRadar() {
 		return radar;
-	}
-	public void setRadar(ArrayList<Vol> radar) {
-		this.radar = radar;
 	}
 	@Override
 	public String toString() {
@@ -132,7 +163,7 @@ public class Aeroport {
 	/**
 	 * Genere un vol de la compagnies qui a le plus de pilote en attente
 	 * Prend les pilotes d'une file d'attente d'une compagnie et les places dans un vol
-	 * Si un vol a été créer il en enregistré dans this.volsEnPreparation
+	 * Si un vol a été créer il demande le décollage
 	 * @return true si un vol a été créer, false sinon
 	 */
 	public boolean generateVol() {
@@ -205,7 +236,9 @@ public class Aeroport {
 		}
 		return false;		
 	}
-	
+	/**
+	 * Genere un vol privé avec un AvionPrivé et des passagers privé
+	 */
 	public void generateVolPrive() {
 		System.out.println("=========Preparation d'un Vol Prive==========");
 		Compagnie c = Program.compagnies.get(1);
@@ -234,6 +267,10 @@ public class Aeroport {
 			}
 		}
 	}
+	/**
+	 * Genere un vol avec un AvionDiplomatique et des diplomates
+	 * Les pilotes sont ceux d'autres Compagnies mais de la même nationalité que les diplomates
+	 */
 	public void generateVolDiplomatique() {
 		System.out.println("=========Preparation d'un Vol Diplomatique==========");
 		Compagnie c = Program.compagnies.get(0);
@@ -369,7 +406,7 @@ public class Aeroport {
 		}
 	}
 	/**
-	 * Fait decoler les avion en premiere place de la file d'attente
+	 * Fait decoller les avion en premiere place de la file d'attente
 	 * Rend l'avion à nouveau utilisable
 	 */
 	public void Decollage() {
@@ -404,7 +441,10 @@ public class Aeroport {
 		
 	}
 	
-	
+	/**
+	 * Consomme le carburant des avions en vols
+	 * Si un avion tombe à 0 l'avion est détruit et la simulation s'arrête
+	 */
 	public void consommationCarburant() {
 		for(Vol v : this.radar) {
 			Avion a = v.getAvion();
