@@ -231,8 +231,8 @@ public class Program {
 							Program.annulationVol();
 							break;
 						case 4:
-							//modification file d'attente de l'avion
 							System.out.println("Passage en priorite d'un vol");
+							Program.VolEnPriorite();
 							break;
 						case 5:
 							System.out.println("Fin du programme");
@@ -305,7 +305,8 @@ public class Program {
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
-	//Ouverture d'une piste
+	
+	//Annulation vol
 	private static void annulationVol () {
 		System.out.println("Liste des vols: ");
 		for (Piste piste : orly.getPistesDecollage()) {
@@ -328,7 +329,32 @@ public class Program {
 				
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-	}	
+	}
+	
+	//Passage en priorite vol
+	private static void VolEnPriorite () {
+		System.out.println("Liste des vols: ");
+		for (Piste piste : orly.getPistesDecollage()) {
+			System.out.println(piste.getFileDAttente());
+		}
+
+		System.out.println("Entrer le numero du vol que vous voulez passer en priorite:\n");
+				
+		boolean actionValidee = false;
+		while(!actionValidee) {
+			Scanner sc = new Scanner(System.in);
+					
+			if(sc.hasNextInt()) {
+				actionValidee = orly.prioriteVol(sc.nextInt());	
+				System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");
+			} else if (sc.hasNext("exit")) {
+				break;
+			}
+		}
+				
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}
 	
 	public static void DemandeAtterissage() {
 		Compagnie c = compagnies.get((int)(Math.random() * compagnies.size()));

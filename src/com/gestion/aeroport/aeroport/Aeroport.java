@@ -614,6 +614,7 @@ public class Aeroport {
 		
 		return false;
 	}
+	
 	public boolean annulerVol(int id) {
 		ArrayList<Passager> listeOccupants;
 
@@ -678,6 +679,19 @@ public class Aeroport {
 					else {
 						System.out.println("Une erreur c'est produite l'avion n'avait pas de destination");
 					}				
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean prioriteVol(int id) {
+		
+		for (Piste piste : getPistesDecollage()) {
+			for (Vol vol : piste.getFileDAttente()) {
+				if (vol.getNumeroDeVol() == id) {
+					return true;
 				}
 			}
 		}
