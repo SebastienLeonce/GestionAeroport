@@ -1,6 +1,7 @@
 package com.gestion.aeroport.aeroport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -688,12 +689,45 @@ public class Aeroport {
 	
 	public boolean prioriteVol(int id) {
 		
+		Piste pisteID = null;
+		Vol volID = null;
+		boolean flag = false;
+		
 		for (Piste piste : getPistesDecollage()) {
 			for (Vol vol : piste.getFileDAttente()) {
 				if (vol.getNumeroDeVol() == id) {
-					return true;
+					pisteID = piste;
+					volID = vol;
 				}
 			}
+		}
+		
+		if (pisteID != null && volID != null) {
+			ArrayList<Vol> fileAttente = new ArrayList<Vol>();
+			
+			if (volID.getAvion() instanceof AvionDiplomatique) {
+				fileAttente = pisteID.getFileDAttente();
+				fileAttente.remove(volID);
+				fileAttente.add(0, volID);
+				pisteID.setFileDAttente(fileAttente);
+			} else {
+				for (Vol vol : pisteID.getFileDAttente()) {
+					if (vol.getAvion() instanceof AvionDiplomatique && !flag) {
+						fileAttente.add(volID);
+						fileAttente.add(vol);
+						
+						flag = true;
+						
+					} else if (!volID.equals(vol)) {
+						fileAttente.add(vol);
+					}
+				}
+				if (!flag) {fileAttente.add(volID);}
+				Collections.reverse(fileAttente);
+				
+				pisteID.setFileDAttente(fileAttente);
+			}
+			return true;
 		}
 		
 		return false;
