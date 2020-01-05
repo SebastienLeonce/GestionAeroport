@@ -563,5 +563,29 @@ public class Aeroport {
 		}			
 		
 		return false;
+	}
+	public boolean annulerVol(int id) {
+		ArrayList<Passager> listeOccupants;
+
+		for (Piste piste : getPistesDecollage()) {
+			for (Vol vol : piste.getFileDAttente()) {
+				if (vol.getNumeroDeVol() == id) {
+					listeOccupants = vol.getOccupants();
+					
+					for (Passager occupant : listeOccupants) {
+						this.getFileAttentePassager();
+						this.getFileAttentePassagerDiplomatique();
+						this.getFileAttentePassagerPrive();
+						this.getFileAttentePersonnel();
+						this.getFileAttentePilote();
+						////////////////////////////////////////////
+					}
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}	
 }
