@@ -270,7 +270,7 @@ public class Program {
 			
 			if(sc.hasNextInt()) {
 				actionValidee = orly.eteindrePiste(sc.nextInt());	
-				System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");
+				if (!actionValidee) { System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");}
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
@@ -296,7 +296,7 @@ public class Program {
 				
 			if(sc.hasNextInt()) {
 				actionValidee = orly.ouvrirPiste(sc.nextInt());	
-				System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");
+				if (!actionValidee) { System.out.println("Entrer un id de piste valide ou ecriver \"exit\"\n");}
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
@@ -321,7 +321,7 @@ public class Program {
 					
 			if(sc.hasNextInt()) {
 				actionValidee = orly.annulerVol(sc.nextInt());	
-				System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");
+				if (!actionValidee) { System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");}
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
@@ -346,7 +346,7 @@ public class Program {
 					
 			if(sc.hasNextInt()) {
 				actionValidee = orly.prioriteVol(sc.nextInt());	
-				System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");
+				if (!actionValidee) { System.out.println("Entrer un numero de vol valide ou ecriver \"exit\"\n");}
 			} else if (sc.hasNext("exit")) {
 				break;
 			}
